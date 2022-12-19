@@ -1,0 +1,21 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Urządzenie zostało już skonfigutowane"
+        },
+        "error": {
+            "cannot_connect": "Błąd połączenia",
+            "invalid_auth": "Błąd autoryzacji",
+            "unknown": "Niespodziewany błąd"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Hasło",
+                    "username": "Nazwa użytkownika"
+                }
+            }
+        }
+    }
+}
