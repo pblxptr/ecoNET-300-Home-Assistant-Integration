@@ -79,6 +79,14 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+    ),
+    EconetSensorEntityDescription(
+        key="mixerTemp2",
+        name="Temp Mixer 2",
+        icon="mdi:thermometer",
+        native_unit_of_measurement=TEMP_CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
     )
 )
 
@@ -92,22 +100,14 @@ class EconetSensor(CoordinatorEntity, SensorEntity):
 
         self.entity_description = description
         self._coordinator = coordinator
-        self._device_info = device_info
 
-    @property
-    def unique_id(self) -> str:
-        """A unique identifier for this entity."""
-        return f"{self._device_info['uid']}-{self.entity_description.key}"
+        self._attr_unique_id = f"{device_info['uid']}-{self.entity_description.key}"
+        self._attr_device_info = device_info
 
     @property
     def name(self) -> str:
         """Return the name of the entity."""
         return self.entity_description.name
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return device info."""
-        return self._device_info
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -115,9 +115,16 @@ class EconetSensor(CoordinatorEntity, SensorEntity):
         # self._attr_is_on = self.coordinator.data[self.idx]["state"]
         _LOGGER.debug("Update EconetSensor entity:" + self.entity_description.name)
 
+        if self._coordinator.data[self.entity_description.key] is None:
+            return
+
         self._attr_native_value = round(self._coordinator.data[self.entity_description.key], 2)
 
         self.async_write_ha_state()
+
+    @property
+    def available(self) -> bool:
+        return self._coordinator.data[self.entity_description.key] is not None
 
 
 async def async_setup_entry(
