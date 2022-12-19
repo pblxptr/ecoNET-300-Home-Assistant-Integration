@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from config.custom_components.econet300.common import EconetDataCoordinator, Econet300Api
+from .common import EconetDataCoordinator, Econet300Api
 from homeassistant.components.sensor import SensorEntityDescription, SensorStateClass, SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import TEMP_CELSIUS, PERCENTAGE
