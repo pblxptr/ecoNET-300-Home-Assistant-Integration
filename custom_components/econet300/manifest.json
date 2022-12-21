@@ -1,6 +1,6 @@
 {
   "domain": "econet300",
-  "name": "Econet300",
+  "name": "ecoNET300",
   "config_flow": true,
   "documentation": "https://www.home-assistant.io/integrations/example",
   "requirements": [],
