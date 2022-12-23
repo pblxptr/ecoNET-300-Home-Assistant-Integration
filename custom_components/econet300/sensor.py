@@ -25,6 +25,10 @@ class EconetSensorEntityDescription(SensorEntityDescription):
 
 SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     EconetSensorEntityDescription(
+        key="pumpCOWorks",
+        name="Boiler operation status",
+    ),
+    EconetSensorEntityDescription(
         key="tempFeeder",
         name="Feeder temp",
         icon="mdi:thermometer",
@@ -57,13 +61,21 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.TEMPERATURE,
     ),
     EconetSensorEntityDescription(
-        key="tempBack",
-        name="Temp back",
+        key="tempCOSet",
+        name="Boiler set temperature",
         icon="mdi:thermometer",
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
     ),
+    # EconetSensorEntityDescription(
+    #     key="tempBack",
+    #     name="Temp back",
+    #     icon="mdi:thermometer",
+    #     native_unit_of_measurement=TEMP_CELSIUS,
+    #     state_class=SensorStateClass.MEASUREMENT,
+    #     device_class=SensorDeviceClass.TEMPERATURE,
+    # ),
     EconetSensorEntityDescription(
         key="tempCWU",
         name="Temp CWU",
@@ -81,12 +93,36 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         device_class=SensorDeviceClass.TEMPERATURE,
     ),
     EconetSensorEntityDescription(
+        key="mixerSetTemp1",
+        name="Boiler Mixer 1 Heat Set Temperature",
+        icon="mdi:thermometer",
+        native_unit_of_measurement=TEMP_CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+    ),
+    EconetSensorEntityDescription(
         key="mixerTemp2",
         name="Temp Mixer 2",
         icon="mdi:thermometer",
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+    ),
+    EconetSensorEntityDescription(
+        key="boilerPower",
+        name="Boiler output",
+        icon="mdi:microsoft-powerpoint",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.SPEED,
+    ),
+    EconetSensorEntityDescription(
+        key="fuelLevel",
+        name="Fuel level",
+        icon="mdi:gas-station",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.SPEED,
     ),
     EconetSensorEntityDescription(
         key="tempExternalSensor",
@@ -103,7 +139,7 @@ class EconetSensor(CoordinatorEntity, SensorEntity):
     """Describes Econet binary sensor entity."""
 
     def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
-                 device_info: EconetDeviceInfo):
+                device_info: EconetDeviceInfo):
         super().__init__(coordinator)
 
         self.entity_description = description
