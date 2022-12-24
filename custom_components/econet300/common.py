@@ -1,6 +1,8 @@
+import asyncio
 import logging
 from datetime import timedelta
 from http import HTTPStatus
+from typing import Any
 
 import async_timeout
 from aiohttp import BasicAuth, ClientSession
@@ -9,7 +11,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, ConfigEntryAuthFailed
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-from .const import DOMAIN
+from .const import DOMAIN, API_SYS_PARAMS, API_SYS_PARAMS_PARAM_UID, API_REG_PARAMS, API_REG_PARAMS_PARAM_DATA
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,6 +24,10 @@ class ApiError(Exception):
     """AuthError"""
 
 
+class DataError(Exception):
+    """DataError"""
+
+
 class EconetClient:
     def __init__(self, host: str, username: str, password: str, session: ClientSession) -> None:
         """Initialize."""
@@ -32,25 +38,27 @@ class EconetClient:
     def host(self):
         return self._host
 
-    async def get_reg_params(self):
-        return await self.get_params("regParams")
-
-    async def get_sys_params(self):
-        return await self.get_params("sysParams")
-
     async def get_params(self, reg):
-        async with await self._get("http://" + self._host + "/econet/" + reg) as resp:
+        attempt = 0
+        max_attempts = 5
 
-            if resp.status == HTTPStatus.UNAUTHORIZED:
-                raise AuthError
+        while ++attempt <= max_attempts:
+            try:
+                async with await self._get("http://" + self._host + "/econet/" + reg) as resp:
 
-            elif resp.status != HTTPStatus.OK:
-                return None
+                    if resp.status == HTTPStatus.UNAUTHORIZED:
+                        raise AuthError
 
-            return await resp.json()
+                    elif resp.status != HTTPStatus.OK:
+                        return None
+
+                    return await resp.json()
+            except TimeoutError as error:
+                _LOGGER.warning("Timeout error, retry({}/{})".format(attempt, max_attempts))
+                await asyncio.sleep(1)
 
     async def _get(self, url):
-        return await self._session.get(url, auth=self._auth, timeout=5)
+        return await self._session.get(url, auth=self._auth, timeout=10)
 
 
 class Econet300Api:
@@ -61,17 +69,26 @@ class Econet300Api:
         return self._client.host()
 
     async def ping(self):
-        await self._client.get_sys_params()
+        await self.uid()
 
     async def uid(self) -> str:
-        data = await self._client.get_sys_params()
-
-        return data["uid"]
+        return await self._fetch_reg_key(API_SYS_PARAMS, API_SYS_PARAMS_PARAM_UID)
 
     async def fetch_data(self):
-        data = await self._client.get_reg_params()
+        return await self._fetch_reg_key(API_REG_PARAMS, API_REG_PARAMS_PARAM_DATA)
 
-        return data["curr"]
+    async def _fetch_reg_key(self, reg_name, data_key):
+        data = await self._client.get_params(reg_name)
+
+        if data is None:
+            raise DataError("Data fetched by API for reg: " + reg_name + " is None")
+
+        if data_key not in data:
+            _LOGGER.debug(data)
+            raise DataError("Data for key: " + data_key + " does not exist")
+
+        return data[data_key]
+
 
 def make_api(hass: HomeAssistant, data: dict):
     return Econet300Api(EconetClient(
@@ -95,12 +112,18 @@ class EconetDataCoordinator(DataUpdateCoordinator):
         )
         self._api = api
 
+    def has_data(self, key: str):
+        return self.data[key] is not None
+
     async def _async_update_data(self):
         """Fetch data from API endpoint.
 
         This is the place to pre-process the data to lookup tables
         so entities can quickly look up their data.
         """
+
+        _LOGGER.debug("Fetching data from API")
+
         try:
             # Note: asyncio.TimeoutError and aiohttp.ClientError are already
             # handled by the data update coordinator.

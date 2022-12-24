@@ -6,11 +6,11 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady, ConfigEntryAuthFailed
 from .common import make_api, AuthError, EconetDataCoordinator
-from .const import DOMAIN, API_PROP_NAME, COORDINATOR_PROP_NAME
+from .const import DOMAIN, SERVICE_API, SERVICE_COORDINATOR
 
 # TODO List the platforms that you want to support.
 # For your initial PR, limit it to 1 platform.
-PLATFORMS: list[Platform] = [Platform.SENSOR]
+PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BINARY_SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -31,8 +31,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await coordinator.async_config_entry_first_refresh()
 
     hass.data[DOMAIN][entry.entry_id] = {
-        API_PROP_NAME: api,
-        COORDINATOR_PROP_NAME: coordinator
+        SERVICE_API: api,
+        SERVICE_COORDINATOR: coordinator
     }
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)

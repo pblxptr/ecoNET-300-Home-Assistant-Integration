@@ -1,19 +1,19 @@
 from dataclasses import dataclass
+from typing import Callable, Any
 
 from .common import EconetDataCoordinator, Econet300Api
 from homeassistant.components.sensor import SensorEntityDescription, SensorStateClass, SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import TEMP_CELSIUS, PERCENTAGE
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from .const import DOMAIN, COORDINATOR_PROP_NAME, API_PROP_NAME, DEVICE_INFO_NAME, DEVICE_INFO_MODEL, \
+from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API, DEVICE_INFO_NAME, DEVICE_INFO_MODEL, \
     DEVICE_INFO_MANUFACTURER
 
 import logging
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .entity import EconetDeviceInfo
+from .entity import EconetDeviceInfo, EconetEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,6 +21,8 @@ _LOGGER = logging.getLogger(__name__)
 @dataclass
 class EconetSensorEntityDescription(SensorEntityDescription):
     """Describes Econet sensor entity."""
+
+    process_val: Callable[[Any], Any] = lambda x: x
 
 
 SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
@@ -31,6 +33,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+        process_val=lambda x: round(x, 2)
     ),
     EconetSensorEntityDescription(
         key="fanPower",
@@ -39,100 +42,70 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.SPEED,
+        process_val=lambda x: round(x, 2)
     ),
     EconetSensorEntityDescription(
         key="tempFlueGas",
-        name="Temp flue gas",
+        name="Exhaust temperature",
         icon="mdi:thermometer",
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+        process_val=lambda x: round(x, 2)
     ),
     EconetSensorEntityDescription(
         key="tempCO",
-        name="Temp kettle",
+        name="Fireplace temperature",
         icon="mdi:thermometer",
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+        process_val=lambda x: round(x, 2)
     ),
     EconetSensorEntityDescription(
         key="tempBack",
-        name="Temp back",
+        name="Water back temperature ",
         icon="mdi:thermometer",
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+        process_val=lambda x: round(x, 2)
     ),
     EconetSensorEntityDescription(
         key="tempCWU",
-        name="Temp CWU",
+        name="Water temperature",
         icon="mdi:thermometer",
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-    ),
-    EconetSensorEntityDescription(
-        key="mixerTemp1",
-        name="Temp Mixer 1",
-        icon="mdi:thermometer",
-        native_unit_of_measurement=TEMP_CELSIUS,
-        state_class=SensorStateClass.MEASUREMENT,
-        device_class=SensorDeviceClass.TEMPERATURE,
-    ),
-    EconetSensorEntityDescription(
-        key="mixerTemp2",
-        name="Temp Mixer 2",
-        icon="mdi:thermometer",
-        native_unit_of_measurement=TEMP_CELSIUS,
-        state_class=SensorStateClass.MEASUREMENT,
-        device_class=SensorDeviceClass.TEMPERATURE,
+        process_val=lambda x: round(x, 2)
     ),
     EconetSensorEntityDescription(
         key="tempExternalSensor",
-        name="Temp External Sensor",
+        name="Outside temperature",
         icon="mdi:thermometer",
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
+        process_val=lambda x: round(x, 2)
     )
 )
 
 
-class EconetSensor(CoordinatorEntity, SensorEntity):
+class EconetSensor(SensorEntity, EconetEntity):
     """Describes Econet binary sensor entity."""
 
     def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
                  device_info: EconetDeviceInfo):
-        super().__init__(coordinator)
+        super().__init__(description, coordinator, device_info)
 
-        self.entity_description = description
-        self._coordinator = coordinator
-
-        self._attr_unique_id = f"{device_info['uid']}-{self.entity_description.key}"
-        self._attr_device_info = device_info
-
-    @property
-    def name(self) -> str:
-        """Return the name of the entity."""
-        return self.entity_description.name
-
-    @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
-        # self._attr_is_on = self.coordinator.data[self.idx]["state"]
+    def _sync_state(self, value):
+        """Sync state"""
         _LOGGER.debug("Update EconetSensor entity:" + self.entity_description.name)
 
-        if self._coordinator.data[self.entity_description.key] is None:
-            return
-
-        self._attr_native_value = round(self._coordinator.data[self.entity_description.key], 2)
+        self._attr_native_value = self.entity_description.process_val(value)
 
         self.async_write_ha_state()
-
-    @property
-    def available(self) -> bool:
-        return self._coordinator.data[self.entity_description.key] is not None
 
 
 async def async_setup_entry(
@@ -142,8 +115,8 @@ async def async_setup_entry(
 ) -> bool:
     """Set up the sensor platform."""
 
-    coordinator = hass.data[DOMAIN][entry.entry_id][COORDINATOR_PROP_NAME]
-    api = hass.data[DOMAIN][entry.entry_id][API_PROP_NAME]
+    coordinator = hass.data[DOMAIN][entry.entry_id][SERVICE_COORDINATOR]
+    api = hass.data[DOMAIN][entry.entry_id][SERVICE_API]
 
     uid = await api.uid()
 
@@ -155,8 +128,13 @@ async def async_setup_entry(
         model=DEVICE_INFO_MODEL
     )
 
-    entities: list[EconetSensor] = [
-        *[EconetSensor(description, coordinator, device_info) for description in SENSOR_TYPES]
-    ]
+    entities: list[EconetSensor] = []
+
+    for description in SENSOR_TYPES:
+        if coordinator.has_data(description.key):
+            entities.append(EconetSensor(description, coordinator, device_info))
+        else:
+            _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
+                                                                   "added")
 
     return async_add_entities(entities)

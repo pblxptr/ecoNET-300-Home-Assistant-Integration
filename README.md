@@ -1,12 +1,11 @@
 # ecoNET300 Home Assistant integration
-<p align="center">
-
+<div align="center">
 
 | Home Assistant  | ecoNET300     |
 | --------------- | ------------- |
 | <img src="images/ha.png" width="100" height="100" />                |   <img src="images/econet.webp" width="95" height="95" />            |
 
-</p>
+</div>
 
 
 
@@ -76,6 +75,22 @@ __Password__: Local password (NOT the password that you use to login to econet24
 </details>
 <br>
 
+## Entities
+### Sensors
+- Fan power (fanPower)
+- Feeder temperature (tempFeeder)
+- Exhaust (tempFlueGas)
+- Fireplace temperature (tempCO)
+- Water back temperature (tempBack)
+- Water temperature (tempCWU)
+- Outside temperature (tempExternalSensor)
+
+### Binary sensors
+- Water pump (pumpCWUWorks)
+- Fireplace pump (pumpFireplaceWorks)
+- Circulation pump (pumpCirculationWorks)
+- Solar pump (pumpSolarWorks)
+- Lighter (lighterWorks)
 
 ## Contribution
 
