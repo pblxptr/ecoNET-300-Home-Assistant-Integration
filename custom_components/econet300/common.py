@@ -113,7 +113,7 @@ class EconetDataCoordinator(DataUpdateCoordinator):
         self._api = api
 
     def has_data(self, key: str):
-        return self.data[key] is not None
+        return key in self.data
 
     async def _async_update_data(self):
         """Fetch data from API endpoint.
