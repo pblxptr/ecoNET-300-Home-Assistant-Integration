@@ -29,11 +29,11 @@ class MemCache:
 
     def get(self, key):
         if key not in self._data or self._data[key].expiry() < time.time():
-            _LOGGER.debug("Cache missing for: {}".format(key))
+            _LOGGER.debug("Cache missing for: '{}'".format(key))
             return None
 
         return self._data[key].value()
 
     def set(self, key, value, duration: int = 60):
-        _LOGGER.debug("Caching value for: {}".format(key))
+        _LOGGER.debug("Caching value for: '{}'".format(key))
         self._data[key] = MemCacheItem(key, value, duration)

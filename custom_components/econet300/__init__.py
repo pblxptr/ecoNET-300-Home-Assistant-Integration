@@ -5,7 +5,9 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady, ConfigEntryAuthFailed
-from .common import make_api, AuthError, EconetDataCoordinator
+
+from .api import make_api
+from .common import AuthError, EconetDataCoordinator
 from .mem_cache import MemCache
 from .const import DOMAIN, SERVICE_API, SERVICE_COORDINATOR
 

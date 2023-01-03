@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Callable, Any
 
 from homeassistant.components.number import NumberEntity, NumberDeviceClass, NumberEntityDescription
 from homeassistant.config_entries import ConfigEntry
@@ -7,7 +6,8 @@ from homeassistant.const import TEMP_CELSIUS
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .common import EconetDataCoordinator, Econet300Api, Limits
+from .common import EconetDataCoordinator, Econet300Api
+from .api import Limits
 
 from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API
 
@@ -47,10 +47,13 @@ class EconetNumber(EconetEntity, NumberEntity):
     def __init__(self,
                  description: EconetNumberEntityDescription,
                  coordinator: EconetDataCoordinator,
+                 api: Econet300Api,
                  device_info: EconetDeviceInfo,
                  limits: Limits
                  ):
         super().__init__(description, coordinator, device_info)
+
+        self._api = api
 
         self._attr_native_min_value = limits.min
         self._attr_native_max_value: limits.max
@@ -59,11 +62,31 @@ class EconetNumber(EconetEntity, NumberEntity):
         """Sync state"""
 
         self._attr_native_value = value
+
+        #TODO: Tmp remove
+        self._attr_native_min_value = value - 1
+        self._attr_native_max_value = value + 1
+
         self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
         """Update the current value."""
         _LOGGER.debug("Set value: {}".format(value))
+
+        if value == self._attr_native_value:
+            return
+
+        if value > self._attr_native_max_value:
+            _LOGGER.warning("Requested value: '{}' exceeds maximum allowed value: '{}'".format(value, self._attr_max_value))
+            return
+        
+        if value < self._attr_native_min_value:
+            _LOGGER.warning("Requested value: '{}' is below allowed value: '{}'".format(value, self._attr_min_value)) 
+            return
+
+        if not await self._api.set_param(self.entity_description.key, int(value)):
+            _LOGGER.warning("Setting value failed")
+            return
 
         self._attr_native_value = value
         self.async_write_ha_state()
@@ -97,7 +120,13 @@ async def async_setup_entry(
             continue
 
         if can_add(description, coordinator):
-            entities.append(EconetNumber(description, coordinator, device_info, number_limits))
+            entities.append(EconetNumber(
+                description, 
+                coordinator,
+                api,
+                device_info, 
+                number_limits
+            ))
         else:
             _LOGGER.debug("Cannot add entity - availability key: {} does not exist".format(description.key))
 

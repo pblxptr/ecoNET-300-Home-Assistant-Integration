@@ -11,8 +11,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 
-from .common import AuthError, make_api
-
+from .mem_cache import MemCache
+from .common import AuthError
+from .api import make_api
 from .const import DOMAIN, CONF_ENTRY_TITLE, CONF_ENTRY_DESCRIPTION
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,7 +31,8 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
     """Validate the user input allows us to connect. """
 
-    api = make_api(hass, data)
+    cache = MemCache()
+    api = make_api(hass, cache, data)
     info = {}
 
     try:
