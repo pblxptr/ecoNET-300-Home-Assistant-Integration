@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import time
 from datetime import timedelta
 from http import HTTPStatus
 from typing import Any
@@ -11,7 +12,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError, ConfigEntryAuthFailed
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-from .const import DOMAIN, API_SYS_PARAMS, API_SYS_PARAMS_PARAM_UID, API_REG_PARAMS, API_REG_PARAMS_PARAM_DATA
+from .const import DOMAIN, API_SYS_PARAMS_URI, API_SYS_PARAMS_PARAM_UID, API_REG_PARAMS_URI, API_REG_PARAMS_PARAM_DATA, \
+    API_EDITABLE_PARAMS_LIMITS_URI, API_EDITABLE_PARAMS_LIMITS_DATA, DEVICE_INFO_NAME, DEVICE_INFO_MANUFACTURER, \
+    DEVICE_INFO_MODEL
+# from .entity import EconetDeviceInfo
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,6 +35,11 @@ class DataError(Exception):
 class EconetClient:
     def __init__(self, host: str, username: str, password: str, session: ClientSession) -> None:
         """Initialize."""
+
+        if not "http://" in host or not "https://" in host:
+            _LOGGER.warning("Manually adding 'http' to host")
+            host = "http://" + host
+
         self._host = host
         self._session = session
         self._auth = BasicAuth(username, password)
@@ -44,7 +53,7 @@ class EconetClient:
 
         while ++attempt <= max_attempts:
             try:
-                async with await self._get("http://" + self._host + "/econet/" + reg) as resp:
+                async with await self._get(self._host + "/econet/" + reg) as resp:
 
                     if resp.status == HTTPStatus.UNAUTHORIZED:
                         raise AuthError
@@ -72,10 +81,13 @@ class Econet300Api:
         await self.uid()
 
     async def uid(self) -> str:
-        return await self._fetch_reg_key(API_SYS_PARAMS, API_SYS_PARAMS_PARAM_UID)
+        return await self._fetch_reg_key(API_SYS_PARAMS_URI, API_SYS_PARAMS_PARAM_UID)
 
     async def fetch_data(self):
-        return await self._fetch_reg_key(API_REG_PARAMS, API_REG_PARAMS_PARAM_DATA)
+        return await self._fetch_reg_key(API_REG_PARAMS_URI, API_REG_PARAMS_PARAM_DATA)
+
+    async def fetch_editable_limits(self):
+        return await self._fetch_reg_key(API_EDITABLE_PARAMS_LIMITS_URI, API_EDITABLE_PARAMS_LIMITS_DATA)
 
     async def _fetch_reg_key(self, reg_name, data_key):
         data = await self._client.get_params(reg_name)

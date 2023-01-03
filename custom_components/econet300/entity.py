@@ -6,6 +6,7 @@ from homeassistant.helpers.entity import DeviceInfo, EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .common import EconetDataCoordinator
+from .const import DEVICE_INFO_NAME, DEVICE_INFO_MANUFACTURER, DEVICE_INFO_MODEL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -14,6 +15,15 @@ class EconetDeviceInfo(DeviceInfo):
     """EconetDeviceInfo"""
     uid: str
 
+def make_device_info(uid: str, host: str):
+    return EconetDeviceInfo(
+        uid=uid,
+        identifiers={(tuple(uid))},
+        name=DEVICE_INFO_NAME,
+        manufacturer=DEVICE_INFO_MANUFACTURER,
+        model=DEVICE_INFO_MODEL,
+        configuration_url=host
+    )
 
 class EconetEntity(CoordinatorEntity):
     """Representes EconetEntity"""

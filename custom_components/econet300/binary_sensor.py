@@ -14,7 +14,7 @@ from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API, DEVICE_INFO_NAME, D
 
 import logging
 
-from .entity import EconetDeviceInfo, EconetEntity
+from .entity import EconetDeviceInfo, EconetEntity, make_device_info
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -78,6 +78,10 @@ class EconetBinarySensor(EconetEntity, BinarySensorEntity):
         self.async_write_ha_state()
 
 
+def can_add(desc: EconetBinarySensorEntityDescription, coordinator: EconetDataCoordinator):
+    return coordinator.has_data(desc.availability_key) and coordinator.data[desc.availability_key] is not False
+
+
 async def async_setup_entry(
         hass: HomeAssistant,
         entry: ConfigEntry,
@@ -90,22 +94,14 @@ async def async_setup_entry(
 
     uid = await api.uid()
 
-    device_info = EconetDeviceInfo(
-        uid=uid,
-        identifiers={(tuple(uid))},
-        name=DEVICE_INFO_NAME,
-        manufacturer=DEVICE_INFO_MANUFACTURER,
-        model=DEVICE_INFO_MODEL
-    )
+    device_info = make_device_info(uid, api.host())
 
     entities: list[EconetBinarySensor] = []
 
     for description in BINARY_SENSOR_TYPES:
-        if coordinator.has_data(description.availability_key) and \
-                coordinator.data[description.availability_key] is not False:
+        if can_add(description, coordinator):
             entities.append(EconetBinarySensor(description, coordinator, device_info))
         else:
             _LOGGER.debug("Availability key: " + description.availability_key + "does not exist, entity will not be "
                                                                                 "added")
-
     return async_add_entities(entities)

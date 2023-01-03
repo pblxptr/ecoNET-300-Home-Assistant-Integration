@@ -7,13 +7,12 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import TEMP_CELSIUS, PERCENTAGE
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API, DEVICE_INFO_NAME, DEVICE_INFO_MODEL, \
-    DEVICE_INFO_MANUFACTURER
+from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API
 
 import logging
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .entity import EconetDeviceInfo, EconetEntity
+from .entity import EconetDeviceInfo, EconetEntity, make_device_info
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -108,6 +107,10 @@ class EconetSensor(SensorEntity, EconetEntity):
         self.async_write_ha_state()
 
 
+def can_add(desc: EconetSensorEntityDescription, coordinator: EconetDataCoordinator):
+    return coordinator.has_data(desc.key) and coordinator.data[desc.key] is not None
+
+
 async def async_setup_entry(
         hass: HomeAssistant,
         entry: ConfigEntry,
@@ -120,21 +123,14 @@ async def async_setup_entry(
 
     uid = await api.uid()
 
-    device_info = EconetDeviceInfo(
-        uid=uid,
-        identifiers={(tuple(uid))},
-        name=DEVICE_INFO_NAME,
-        manufacturer=DEVICE_INFO_MANUFACTURER,
-        model=DEVICE_INFO_MODEL
-    )
+    device_info = make_device_info(uid, api.host())
 
     entities: list[EconetSensor] = []
 
     for description in SENSOR_TYPES:
-        if coordinator.has_data(description.key):
+        if can_add(description, coordinator):
             entities.append(EconetSensor(description, coordinator, device_info))
         else:
             _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
                                                                    "added")
-
     return async_add_entities(entities)
