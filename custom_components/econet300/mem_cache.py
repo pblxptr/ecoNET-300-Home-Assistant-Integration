@@ -1,14 +1,16 @@
+import logging
 import time
 
+_LOGGER = logging.getLogger(__name__)
 
-class MemCacheItem(object):
+class MemCacheItem:
     def __init__(self, key, value, duration: int):
         self._key = key
         self._value = value
         self._expiry = time.time() + duration
 
     def value(self):
-        return self.value()
+        return self._value
 
     def expiry(self):
         return self._expiry
@@ -18,15 +20,20 @@ class MemCacheItem(object):
                                                                        self.expiry() < time.time())
 
 
-class MemCache(dict):
+class MemCache:
     def __init__(self):
-        dict.__init__(self)
+        self._data = dict()
+
+    def exists(self, key):
+        return self.get(key) is not None
 
     def get(self, key):
-        if key not in self or self[key].expiry() > time.time():
+        if key not in self._data or self._data[key].expiry() < time.time():
+            _LOGGER.debug("Cache missing for: {}".format(key))
             return None
 
-        return self[key].value()
+        return self._data[key].value()
 
     def set(self, key, value, duration: int = 60):
-        self[key] = MemCacheItem(key, value, duration)
+        _LOGGER.debug("Caching value for: {}".format(key))
+        self._data[key] = MemCacheItem(key, value, duration)

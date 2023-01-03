@@ -6,6 +6,7 @@ from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady, ConfigEntryAuthFailed
 from .common import make_api, AuthError, EconetDataCoordinator
+from .mem_cache import MemCache
 from .const import DOMAIN, SERVICE_API, SERVICE_COORDINATOR
 
 PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.NUMBER]
@@ -15,7 +16,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     hass.data.setdefault(DOMAIN, {})
 
-    api = make_api(hass, entry.data)
+    cache = MemCache()
+    api = make_api(hass, cache, entry.data)
 
     try:
         await api.ping()

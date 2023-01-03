@@ -102,6 +102,6 @@ async def async_setup_entry(
         if can_add(description, coordinator):
             entities.append(EconetBinarySensor(description, coordinator, device_info))
         else:
-            _LOGGER.debug("Availability key: " + description.availability_key + "does not exist, entity will not be "
-                                                                                "added")
+            _LOGGER.debug("Availability key: '{}' does not exist, entity will not be added".format(description.availability_key))
+    
     return async_add_entities(entities)

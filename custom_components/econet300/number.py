@@ -7,7 +7,7 @@ from homeassistant.const import TEMP_CELSIUS
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .common import EconetDataCoordinator, Econet300Api
+from .common import EconetDataCoordinator, Econet300Api, Limits
 
 from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API
 
@@ -21,11 +21,10 @@ _LOGGER = logging.getLogger(__name__)
 @dataclass
 class EconetNumberEntityDescription(NumberEntityDescription):
     """Describes Econet binary sensor entity."""
-    availability_key: str = ""
+
 
 NUMBER_TYPES: tuple[EconetNumberEntityDescription, ...] = (
     EconetNumberEntityDescription(
-        availability_key="tempCOSet",
         key="tempCOSet",
         name="Temp CO set",
         icon="mdi:thermometer",
@@ -33,7 +32,6 @@ NUMBER_TYPES: tuple[EconetNumberEntityDescription, ...] = (
         native_unit_of_measurement=TEMP_CELSIUS
     ),
     EconetNumberEntityDescription(
-        availability_key="tempCWUSet",
         key="tempCWUSet",
         name="Temp CWU set",
         icon="mdi:thermometer",
@@ -46,9 +44,16 @@ NUMBER_TYPES: tuple[EconetNumberEntityDescription, ...] = (
 class EconetNumber(EconetEntity, NumberEntity):
     """Describes Econet binary sensor entity."""
 
-    def __init__(self, description: EconetNumberEntityDescription, coordinator: EconetDataCoordinator,
-                 device_info: EconetDeviceInfo):
+    def __init__(self,
+                 description: EconetNumberEntityDescription,
+                 coordinator: EconetDataCoordinator,
+                 device_info: EconetDeviceInfo,
+                 limits: Limits
+                 ):
         super().__init__(description, coordinator, device_info)
+
+        self._attr_native_min_value = limits.min
+        self._attr_native_max_value: limits.max
 
     def _sync_state(self, value):
         """Sync state"""
@@ -65,7 +70,7 @@ class EconetNumber(EconetEntity, NumberEntity):
 
 
 def can_add(desc: EconetNumberEntityDescription, coordinator: EconetDataCoordinator):
-    return coordinator.has_data(desc.availability_key) and coordinator.data[desc.availability_key] is not None
+    return coordinator.has_data(desc.key) and coordinator.data[desc.key]
 
 
 async def async_setup_entry(
@@ -85,10 +90,15 @@ async def async_setup_entry(
     entities: list[EconetNumber] = []
 
     for description in NUMBER_TYPES:
+        number_limits = await api.get_param_limits(description.key)
+
+        if number_limits is None:
+            _LOGGER.warning("Cannot add entity: {}, Numeric limits for this entity is None")
+            continue
+
         if can_add(description, coordinator):
-            entities.append(EconetNumber(description, coordinator, device_info))
+            entities.append(EconetNumber(description, coordinator, device_info, number_limits))
         else:
-            _LOGGER.debug("Availability key: " + description.availability_key + "does not exist, entity will not be "
-                                                                            "added")
+            _LOGGER.debug("Cannot add entity - availability key: {} does not exist".format(description.key))
 
     return async_add_entities(entities)

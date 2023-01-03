@@ -25,3 +25,14 @@ API_EDIT_PARAM_URI = "rmCurrNewParam"
 API_EDITABLE_PARAMS_LIMITS_URI = "rmCurrentDataParamsEdits"
 API_EDITABLE_PARAMS_LIMITS_DATA = "data"
 
+## Params mapping
+EDITABLE_PARAMS_MAPPING_TABLE = {
+    "tempCOSet": '1280',
+    "tempCWUSet": '1281',
+    "mixerSetTemp1": '1287',
+    "mixerSetTemp2": '1288',
+    "mixerSetTemp3": '1289',
+    "mixerSetTemp4": '1290',
+    "mixerSetTemp5": '1291',
+    "mixerSetTemp6": '1292',
+}
