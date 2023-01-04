@@ -1,3 +1,4 @@
+from abc import ABC
 from dataclasses import dataclass
 from typing import Callable, Any
 
@@ -7,12 +8,12 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import TEMP_CELSIUS, PERCENTAGE
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API
+from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API, AVAILABLE_NUMBER_OF_MIXERS
 
 import logging
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .entity import EconetEntity
+from .entity import EconetEntity, MixerEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -91,12 +92,8 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
 )
 
 
-class EconetSensor(SensorEntity, EconetEntity):
-    """Describes Econet binary sensor entity."""
-
-    def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
-                 api: Econet300Api):
-        super().__init__(description, coordinator, api)
+class EconetSensor(SensorEntity):
+    """"""
 
     def _sync_state(self, value):
         """Sync state"""
@@ -107,8 +104,60 @@ class EconetSensor(SensorEntity, EconetEntity):
         self.async_write_ha_state()
 
 
+class ControllerSensor(EconetEntity, EconetSensor):
+    """"""
+
+    def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
+                 api: Econet300Api):
+        super().__init__(description, coordinator, api)
+
+
+class MixerSensor(MixerEntity, EconetSensor):
+    """"""
+
+    def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
+                 api: Econet300Api, idx: int):
+        super().__init__(description, coordinator, api, idx)
+
+
 def can_add(desc: EconetSensorEntityDescription, coordinator: EconetDataCoordinator):
     return coordinator.has_data(desc.key) and coordinator.data[desc.key] is not None
+
+
+def create_controller_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
+    entities = []
+
+    for description in SENSOR_TYPES:
+        if can_add(description, coordinator):
+            entities.append(ControllerSensor(description, coordinator, api))
+        else:
+            _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
+                                                                   "added")
+
+    return entities
+
+
+def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
+    entities = []
+
+    for i in range(1, AVAILABLE_NUMBER_OF_MIXERS + 1):
+        description = EconetSensorEntityDescription(
+            key="mixerTemp{}".format(i),
+            name="Mixer {} temperature".format(i),
+            icon="mdi:thermometer",
+            native_unit_of_measurement=TEMP_CELSIUS,
+            state_class=SensorStateClass.MEASUREMENT,
+            device_class=SensorDeviceClass.TEMPERATURE,
+            process_val=lambda x: round(x, 2)
+        )
+
+        if can_add(description, coordinator):
+            entities.append(MixerSensor(description, coordinator, api, i))
+        else:
+            _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
+                                                                   "added")
+
+    return entities
 
 
 async def async_setup_entry(
@@ -122,11 +171,7 @@ async def async_setup_entry(
     api = hass.data[DOMAIN][entry.entry_id][SERVICE_API]
 
     entities: list[EconetSensor] = []
+    entities = entities + create_controller_sensors(coordinator, api)
+    entities = entities + create_mixer_sensors(coordinator, api)
 
-    for description in SENSOR_TYPES:
-        if can_add(description, coordinator):
-            entities.append(EconetSensor(description, coordinator, api))
-        else:
-            _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
-                                                                   "added")
     return async_add_entities(entities)
