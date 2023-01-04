@@ -15,6 +15,7 @@ CONF_ENTRY_DESCRIPTION = "PLUM Econet300"
 ## Sys params
 API_SYS_PARAMS_URI = "sysParams"
 API_SYS_PARAMS_PARAM_UID = "uid"
+API_SYS_PARAMS_PARAM_SW_REV = "softVer"
 
 ## Reg params
 API_REG_PARAMS_URI = "regParams"

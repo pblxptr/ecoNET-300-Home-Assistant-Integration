@@ -13,7 +13,7 @@ from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API
 
 import logging
 
-from .entity import EconetDeviceInfo, EconetEntity, make_device_info
+from .entity import EconetEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -48,22 +48,15 @@ class EconetNumber(EconetEntity, NumberEntity):
                  description: EconetNumberEntityDescription,
                  coordinator: EconetDataCoordinator,
                  api: Econet300Api,
-                 device_info: EconetDeviceInfo,
-                 limits: Limits
                  ):
-        super().__init__(description, coordinator, device_info)
-
-        self._api = api
-
-        self._attr_native_min_value = limits.min
-        self._attr_native_max_value: limits.max
+        super().__init__(description, coordinator, api)
 
     def _sync_state(self, value):
         """Sync state"""
 
         self._attr_native_value = value
 
-        #TODO: Tmp remove
+        # TODO: Tmp remove
         self._attr_native_min_value = value - 1
         self._attr_native_max_value = value + 1
 
@@ -77,11 +70,12 @@ class EconetNumber(EconetEntity, NumberEntity):
             return
 
         if value > self._attr_native_max_value:
-            _LOGGER.warning("Requested value: '{}' exceeds maximum allowed value: '{}'".format(value, self._attr_max_value))
+            _LOGGER.warning(
+                "Requested value: '{}' exceeds maximum allowed value: '{}'".format(value, self._attr_max_value))
             return
-        
+
         if value < self._attr_native_min_value:
-            _LOGGER.warning("Requested value: '{}' is below allowed value: '{}'".format(value, self._attr_min_value)) 
+            _LOGGER.warning("Requested value: '{}' is below allowed value: '{}'".format(value, self._attr_min_value))
             return
 
         if not await self._api.set_param(self.entity_description.key, int(value)):
@@ -96,6 +90,11 @@ def can_add(desc: EconetNumberEntityDescription, coordinator: EconetDataCoordina
     return coordinator.has_data(desc.key) and coordinator.data[desc.key]
 
 
+def apply_limits(desc: EconetNumberEntityDescription, limits: Limits):
+    desc.native_min_value = limits.min
+    desc.native_max_value = limits.max
+
+
 async def async_setup_entry(
         hass: HomeAssistant,
         entry: ConfigEntry,
@@ -106,26 +105,22 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][entry.entry_id][SERVICE_COORDINATOR]
     api = hass.data[DOMAIN][entry.entry_id][SERVICE_API]
 
-    uid = await api.uid()
-
-    device_info = make_device_info(uid, api.host())
-
     entities: list[EconetNumber] = []
 
     for description in NUMBER_TYPES:
         number_limits = await api.get_param_limits(description.key)
 
         if number_limits is None:
-            _LOGGER.warning("Cannot add entity: {}, Numeric limits for this entity is None")
+            _LOGGER.warning("Cannot add entity: {}, numeric limits for this entity is None")
             continue
 
         if can_add(description, coordinator):
+
+            apply_limits(description, number_limits)
             entities.append(EconetNumber(
-                description, 
+                description,
                 coordinator,
-                api,
-                device_info, 
-                number_limits
+                api
             ))
         else:
             _LOGGER.debug("Cannot add entity - availability key: {} does not exist".format(description.key))

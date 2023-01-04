@@ -14,7 +14,7 @@ from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API, DEVICE_INFO_NAME, D
 
 import logging
 
-from .entity import EconetDeviceInfo, EconetEntity, make_device_info
+from .entity import EconetEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -68,8 +68,8 @@ class EconetBinarySensor(EconetEntity, BinarySensorEntity):
     """Describes Econet binary sensor entity."""
 
     def __init__(self, description: EconetBinarySensorEntityDescription, coordinator: EconetDataCoordinator,
-                 device_info: EconetDeviceInfo):
-        super().__init__(description, coordinator, device_info)
+                 api: Econet300Api):
+        super().__init__(description, coordinator, api)
 
     def _sync_state(self, value):
         """Sync state"""
@@ -92,15 +92,11 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][entry.entry_id][SERVICE_COORDINATOR]
     api = hass.data[DOMAIN][entry.entry_id][SERVICE_API]
 
-    uid = await api.uid()
-
-    device_info = make_device_info(uid, api.host())
-
     entities: list[EconetBinarySensor] = []
 
     for description in BINARY_SENSOR_TYPES:
         if can_add(description, coordinator):
-            entities.append(EconetBinarySensor(description, coordinator, device_info))
+            entities.append(EconetBinarySensor(description, coordinator, api))
         else:
             _LOGGER.debug("Availability key: '{}' does not exist, entity will not be added".format(description.availability_key))
     

@@ -12,7 +12,7 @@ from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API
 import logging
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .entity import EconetDeviceInfo, EconetEntity, make_device_info
+from .entity import EconetEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -95,8 +95,8 @@ class EconetSensor(SensorEntity, EconetEntity):
     """Describes Econet binary sensor entity."""
 
     def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
-                 device_info: EconetDeviceInfo):
-        super().__init__(description, coordinator, device_info)
+                 api: Econet300Api):
+        super().__init__(description, coordinator, api)
 
     def _sync_state(self, value):
         """Sync state"""
@@ -121,15 +121,11 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][entry.entry_id][SERVICE_COORDINATOR]
     api = hass.data[DOMAIN][entry.entry_id][SERVICE_API]
 
-    uid = await api.uid()
-
-    device_info = make_device_info(uid, api.host())
-
     entities: list[EconetSensor] = []
 
     for description in SENSOR_TYPES:
         if can_add(description, coordinator):
-            entities.append(EconetSensor(description, coordinator, device_info))
+            entities.append(EconetSensor(description, coordinator, api))
         else:
             _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
                                                                    "added")
