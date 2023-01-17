@@ -84,6 +84,7 @@ __Password__: Local password (NOT the password that you use to login to econet24
 - Water back temperature (tempBack)
 - Water temperature (tempCWU)
 - Outside temperature (tempExternalSensor)
+- Fuel level (fuelLevel)
 
 ### Binary sensors
 - Water pump (pumpCWUWorks)
