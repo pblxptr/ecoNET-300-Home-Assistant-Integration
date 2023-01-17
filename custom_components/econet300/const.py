@@ -21,22 +21,3 @@ API_SYS_PARAMS_PARAM_SW_REV = "softVer"
 ## Reg params
 API_REG_PARAMS_URI = "regParams"
 API_REG_PARAMS_PARAM_DATA = "curr"
-
-## Editable params limits
-API_EDIT_PARAM_URI = "rmCurrNewParam"
-API_EDITABLE_PARAMS_LIMITS_URI = "rmCurrentDataParamsEdits"
-API_EDITABLE_PARAMS_LIMITS_DATA = "data"
-
-## Params mapping
-EDITABLE_PARAMS_MAPPING_TABLE = {
-    "tempCOSet": '1280',
-    "tempCWUSet": '1281',
-    "mixerSetTemp1": '1287',
-    "mixerSetTemp2": '1288',
-    "mixerSetTemp3": '1289',
-    "mixerSetTemp4": '1290',
-    "mixerSetTemp5": '1291',
-    "mixerSetTemp6": '1292',
-}
-
-AVAILABLE_NUMBER_OF_MIXERS = 6

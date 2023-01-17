@@ -70,26 +70,3 @@ class EconetEntity(CoordinatorEntity):
 
         await super().async_added_to_hass()
         self._sync_state(value)
-
-
-class MixerEntity(EconetEntity):
-    """Represents MixerEntity"""
-    def __init__(self, description: EntityDescription, coordinator: EconetDataCoordinator,
-                 api: Econet300Api, idx: int):
-        super().__init__(description, coordinator, api)
-
-        self._idx = idx
-    @property
-    def device_info(self) -> DeviceInfo | None:
-        """Return device info of the entity"""
-        return DeviceInfo(
-            identifiers={(DOMAIN, "{}-mixer-{}".format(self._api.uid(), self._idx))},
-            name=DEVICE_INFO_MIXER_NAME,
-            manufacturer=DEVICE_INFO_MANUFACTURER,
-            model=DEVICE_INFO_MODEL,
-            configuration_url=self._api.host(),
-            sw_version=self._api.sw_rev(),
-            via_device=(DOMAIN, self._api.uid())
-        )
-
-
