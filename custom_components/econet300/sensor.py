@@ -1,3 +1,4 @@
+from abc import ABC
 from dataclasses import dataclass
 from typing import Callable, Any
 
@@ -7,13 +8,12 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import TEMP_CELSIUS, PERCENTAGE
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API, DEVICE_INFO_NAME, DEVICE_INFO_MODEL, \
-    DEVICE_INFO_MANUFACTURER
+from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API
 
 import logging
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .entity import EconetDeviceInfo, EconetEntity
+from .entity import EconetEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -108,12 +108,8 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
 )
 
 
-class EconetSensor(SensorEntity, EconetEntity):
-    """Describes Econet binary sensor entity."""
-
-    def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
-                 device_info: EconetDeviceInfo):
-        super().__init__(description, coordinator, device_info)
+class EconetSensor(SensorEntity):
+    """"""
 
     def _sync_state(self, value):
         """Sync state"""
@@ -122,6 +118,31 @@ class EconetSensor(SensorEntity, EconetEntity):
         self._attr_native_value = self.entity_description.process_val(value)
 
         self.async_write_ha_state()
+
+
+class ControllerSensor(EconetEntity, EconetSensor):
+    """"""
+
+    def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
+                 api: Econet300Api):
+        super().__init__(description, coordinator, api)
+
+
+def can_add(desc: EconetSensorEntityDescription, coordinator: EconetDataCoordinator):
+    return coordinator.has_data(desc.key) and coordinator.data[desc.key] is not None
+
+
+def create_controller_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
+    entities = []
+
+    for description in SENSOR_TYPES:
+        if can_add(description, coordinator):
+            entities.append(ControllerSensor(description, coordinator, api))
+        else:
+            _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
+                                                                   "added")
+
+    return entities
 
 
 async def async_setup_entry(
@@ -134,23 +155,7 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][entry.entry_id][SERVICE_COORDINATOR]
     api = hass.data[DOMAIN][entry.entry_id][SERVICE_API]
 
-    uid = await api.uid()
-
-    device_info = EconetDeviceInfo(
-        uid=uid,
-        identifiers={(tuple(uid))},
-        name=DEVICE_INFO_NAME,
-        manufacturer=DEVICE_INFO_MANUFACTURER,
-        model=DEVICE_INFO_MODEL
-    )
-
     entities: list[EconetSensor] = []
-
-    for description in SENSOR_TYPES:
-        if coordinator.has_data(description.key):
-            entities.append(EconetSensor(description, coordinator, device_info))
-        else:
-            _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
-                                                                   "added")
+    entities = entities + create_controller_sensors(coordinator, api)
 
     return async_add_entities(entities)

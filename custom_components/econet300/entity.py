@@ -5,28 +5,41 @@ from homeassistant.core import callback
 from homeassistant.helpers.entity import DeviceInfo, EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from .api import Econet300Api
 from .common import EconetDataCoordinator
+from .const import DEVICE_INFO_CONTROLLER_NAME, DEVICE_INFO_MANUFACTURER, DEVICE_INFO_MODEL, DOMAIN, \
+    DEVICE_INFO_MIXER_NAME
 
 _LOGGER = logging.getLogger(__name__)
-
-
-class EconetDeviceInfo(DeviceInfo):
-    """EconetDeviceInfo"""
-    uid: str
-
 
 class EconetEntity(CoordinatorEntity):
     """Representes EconetEntity"""
 
     def __init__(self, description: EntityDescription, coordinator: EconetDataCoordinator,
-                 device_info: EconetDeviceInfo):
+                 api: Econet300Api):
         super().__init__(coordinator)
 
         self.entity_description = description
 
+        self._api = api
         self._coordinator = coordinator
-        self._attr_unique_id = f"{device_info['uid']}-{self.entity_description.key}"
-        self._attr_device_info = device_info
+
+    @property
+    def unique_id(self) -> str | None:
+        """Return the unique_id of the entity"""
+        return f"{self._api.uid()}-{self.entity_description.key}"
+
+    @property
+    def device_info(self) -> DeviceInfo | None:
+        """Return device info of the entity"""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._api.uid())},
+            name=DEVICE_INFO_CONTROLLER_NAME,
+            manufacturer=DEVICE_INFO_MANUFACTURER,
+            model=DEVICE_INFO_MODEL,
+            configuration_url=self._api.host(),
+            sw_version=self._api.sw_rev()
+        )
 
     @property
     def name(self) -> str:
