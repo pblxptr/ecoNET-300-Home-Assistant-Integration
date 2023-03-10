@@ -104,6 +104,13 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         process_val=lambda x: round(x, 1)
+    ),
+    EconetSensorEntityDescription(
+        key="mode",
+        name="Operation mode",
+        icon="mdi:sync",
+        state_class=SensorStateClass.MEASUREMENT,
+        process_val=lambda x: x
     )
 )
 
