@@ -95,6 +95,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         icon="mdi:gauge",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.POWER_FACTOR,
         process_val=lambda x: round(x, 2)
     ),
     EconetSensorEntityDescription(
