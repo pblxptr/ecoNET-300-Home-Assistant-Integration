@@ -22,6 +22,8 @@ _LOGGER = logging.getLogger(__name__)
 @dataclass
 class EconetBinarySensorEntityDescription(BinarySensorEntityDescription):
     """Describes Econet binary sensor entity."""
+
+    icon_off: str | None = None
     availability_key: str = ""
 
 
@@ -31,6 +33,7 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         key="pumpCWUWorks",
         name="Water pump",
         icon="mdi:pump",
+        icon_off="mdi:pump-off",
         device_class=BinarySensorDeviceClass.RUNNING
     ),
     EconetBinarySensorEntityDescription(
@@ -38,6 +41,7 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         key="pumpCirculationWorks",
         name="Circulation pump",
         icon="mdi:pump",
+        icon_off="mdi:pump-off",
         device_class=BinarySensorDeviceClass.RUNNING
     ),
     EconetBinarySensorEntityDescription(
@@ -45,6 +49,7 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         key="pumpFireplaceWorks",
         name="Fireplace pump",
         icon="mdi:pump",
+        icon_off="mdi:pump-off",
         device_class=BinarySensorDeviceClass.RUNNING
     ),
     EconetBinarySensorEntityDescription(
@@ -52,6 +57,15 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         key="pumpSolarWorks",
         name="Solar pump",
         icon="mdi:pump",
+        icon_off="mdi:pump-off",
+        device_class=BinarySensorDeviceClass.RUNNING
+    ),
+    EconetBinarySensorEntityDescription(
+        availability_key="pumpCO",
+        key="pumpCOWorks",
+        name="pumpCO",
+        icon="mdi:pump",
+        icon_off="mdi:pump-off",
         device_class=BinarySensorDeviceClass.RUNNING
     ),
     EconetBinarySensorEntityDescription(
@@ -59,6 +73,29 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         key="lighterWorks",
         name="Lighter",
         icon="mdi:fire",
+        icon_off="mdi:fire-off",
+        device_class=BinarySensorDeviceClass.RUNNING
+    ),
+    EconetBinarySensorEntityDescription(
+        availability_key="feeder",
+        key="feederWorks",
+        name="Feeder",
+        icon="mdi:screw-lag",
+        device_class=BinarySensorDeviceClass.RUNNING
+    ),
+    EconetBinarySensorEntityDescription(
+        availability_key="fan2Exhaust",
+        key="fanWorks",
+        name="Feeder",
+        icon="mdi:screw-lag",
+        device_class=BinarySensorDeviceClass.RUNNING
+    ),
+        EconetBinarySensorEntityDescription(
+        availability_key="fan",
+        key="fan2ExhaustWorks",
+        name="Feeder",
+        icon="mdi:fan",
+        icon_off = "mdi:fan-off",
         device_class=BinarySensorDeviceClass.RUNNING
     )
 )
@@ -78,7 +115,7 @@ class ControllerBinarySensor(EconetEntity, EconetBinarySensor):
     """Describes Econet binary sensor entity."""
 
     def __init__(self, description: EconetBinarySensorEntityDescription, coordinator: EconetDataCoordinator,
-                 api: Econet300Api):
+                api: Econet300Api):
         super().__init__(description, coordinator, api)
 
 
@@ -93,7 +130,7 @@ def create_binary_sensors(coordinator: EconetDataCoordinator, api: Econet300Api)
             entities.append(ControllerBinarySensor(description, coordinator, api))
         else:
             _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
-                                                                   "added")
+                                                                "added")
 
     return entities
 

@@ -26,15 +26,7 @@ class EconetSensorEntityDescription(SensorEntityDescription):
 
 
 SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
-    EconetSensorEntityDescription(
-        key="tempFeeder",
-        name="Feeder temp",
-        icon="mdi:thermometer",
-        native_unit_of_measurement=TEMP_CELSIUS,
-        state_class=SensorStateClass.MEASUREMENT,
-        device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2)
-    ),
+        
     EconetSensorEntityDescription(
         key="fanPower",
         name="Fan power",
@@ -42,6 +34,33 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.POWER_FACTOR,
+        process_val=lambda x: round(x, 2)
+    ),
+    EconetSensorEntityDescription(
+        key="tempCO",
+        name="Boiler actual temp.",
+        icon="mdi:thermometer-lines",
+        native_unit_of_measurement=TEMP_CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        process_val=lambda x: round(x, 2)
+    ),
+    EconetSensorEntityDescription(
+        key="tempCOSet",
+        name="Boiler set temp.",
+        icon="mdi:thermometer-chevron-up",
+        native_unit_of_measurement=TEMP_CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        process_val=lambda x: round(x, 2)
+    ),
+    EconetSensorEntityDescription(
+        key="tempFeeder",
+        name="Feeder temp.",
+        icon="mdi:thermometer",
+        native_unit_of_measurement=TEMP_CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
         process_val=lambda x: round(x, 2)
     ),
     EconetSensorEntityDescription(
@@ -54,14 +73,14 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         process_val=lambda x: round(x, 2)
     ),
     EconetSensorEntityDescription(
-        key="tempCO",
-        name="Fireplace temperature",
+        key="mixerSetTemp1",
+        name="Mixer 1 set temp.",
         icon="mdi:thermometer",
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         process_val=lambda x: round(x, 2)
-    ),
+    ),    
     EconetSensorEntityDescription(
         key="tempBack",
         name="Water back temperature ",
@@ -112,6 +131,22 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         icon="mdi:sync",
         state_class=SensorStateClass.MEASUREMENT,
         process_val=lambda x: x
+    ),
+        EconetSensorEntityDescription(
+        key="lambdaSet",
+        name="Oxygen set level",
+        icon="mdi:lambda",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        process_val=lambda x: x/10
+    ),
+        EconetSensorEntityDescription(
+        key="lambdaLevel",
+        name="Oxygen level",
+        icon="mdi:lambda",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        process_val=lambda x: x/10
     )
 )
 
@@ -132,7 +167,7 @@ class ControllerSensor(EconetEntity, EconetSensor):
     """"""
 
     def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
-                 api: Econet300Api):
+                api: Econet300Api):
         super().__init__(description, coordinator, api)
 
 
@@ -148,7 +183,7 @@ def create_controller_sensors(coordinator: EconetDataCoordinator, api: Econet300
             entities.append(ControllerSensor(description, coordinator, api))
         else:
             _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
-                                                                   "added")
+                                                                "added")
 
     return entities
 
