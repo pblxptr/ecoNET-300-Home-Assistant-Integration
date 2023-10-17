@@ -110,6 +110,14 @@ class EconetBinarySensor(BinarySensorEntity):
         self._attr_is_on = value
         self.async_write_ha_state()
 
+    @property
+    def icon(self) -> str | None:
+        """Return the icon to use in the frontend."""
+        return (
+            self.entity_description.icon_off
+            if self.entity_description.icon_off is not None and not self.is_on
+            else self.entity_description.icon
+        )
 
 class ControllerBinarySensor(EconetEntity, EconetBinarySensor):
     """Describes Econet binary sensor entity."""
