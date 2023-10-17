@@ -84,16 +84,16 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         device_class=BinarySensorDeviceClass.RUNNING
     ),
     EconetBinarySensorEntityDescription(
-        availability_key="fan2Exhaust",
+        availability_key="fan",
         key="fanWorks",
-        name="Feeder",
-        icon="mdi:screw-lag",
+        name="Fan", 
+        icon="mdi:fan",
         device_class=BinarySensorDeviceClass.RUNNING
     ),
         EconetBinarySensorEntityDescription(
-        availability_key="fan",
-        key="fan2ExhaustWorks",
-        name="Feeder",
+        availability_key="fan2Exhaust",
+        key="fan2ExhaustWorks", 
+        name="Fan2",
         icon="mdi:fan",
         icon_off = "mdi:fan-off",
         device_class=BinarySensorDeviceClass.RUNNING
