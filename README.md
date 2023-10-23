@@ -81,17 +81,25 @@ __Password__: Local password (NOT the password that you use to login to econet24
 - Feeder temperature (tempFeeder)
 - Exhaust (tempFlueGas)
 - Fireplace temperature (tempCO)
+- Fireplace set temperature (tempCOSet)
+- Feeder temperature (tempFeeder)
 - Water back temperature (tempBack)
 - Water temperature (tempCWU)
 - Outside temperature (tempExternalSensor)
 - Fuel level (fuelLevel)
+- Mixer 1 set temperature (mixerSetTemp1)
+- Oxygen set level (lambdaSet)
+- Oxygen level (lambdaLevel)
 
 ### Binary sensors
 - Water pump (pumpCWUWorks)
 - Fireplace pump (pumpFireplaceWorks)
 - Circulation pump (pumpCirculationWorks)
 - Solar pump (pumpSolarWorks)
+- Fireplace pump (pumpCOWorks)
 - Lighter (lighterWorks)
+- Fan (fanWorks)
+- Feeder (fanWorks)
 
 ## Contribution
 
