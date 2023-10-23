@@ -8,7 +8,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import API_SYS_PARAMS_PARAM_UID, API_SYS_PARAMS_URI, API_REG_PARAMS_URI, API_REG_PARAMS_PARAM_DATA, \
-    API_SYS_PARAMS_PARAM_SW_REV
+    API_SYS_PARAMS_PARAM_SW_REV, API_SYS_PARAMS_PARAM_HW_VER
 from .mem_cache import MemCache
 
 _LOGGER = logging.getLogger(__name__)
@@ -89,6 +89,7 @@ class Econet300Api:
         self._cache = cache
         self._uid = "default-uid"
         self._sw_revision = "default-sw-revision"
+        self._hw_version = "default-hw-version" 
 
     @classmethod
     async def create(cls, client: EconetClient, cache: MemCache):
@@ -106,6 +107,9 @@ class Econet300Api:
     def sw_rev(self) -> str:
         return self._sw_revision
 
+    def hw_ver(self) -> str:
+        return self._hw_version
+
     async def init(self):
         sys_params = await self._client.get_params(API_SYS_PARAMS_URI)
 
@@ -118,6 +122,11 @@ class Econet300Api:
             _LOGGER.warning("{} not in sys_params - cannot set proper sw_revision".format(API_SYS_PARAMS_PARAM_SW_REV))
         else:
             self._sw_revision = sys_params[API_SYS_PARAMS_PARAM_SW_REV]
+
+        if API_SYS_PARAMS_PARAM_HW_VER not in sys_params:
+            _LOGGER.warning("{} not in sys_params - cannot set proper hw_version".format(API_SYS_PARAMS_PARAM_HW_VER))
+        else:
+            self._hw_version = sys_params[API_SYS_PARAMS_PARAM_HW_VER]
 
     async def set_param(self, param, value) -> bool:
         param_idx = map_param(param)

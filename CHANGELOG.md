@@ -14,3 +14,7 @@
 * [Entity/BinarySensor] Added `solar pump works`
 * [Entity/BinarySensor] Added `lighter works`
 * [Config] Added config via GUI
+
+## v0.1.1
+Add new sensors and binary sensor
+Add hardware version

@@ -38,7 +38,8 @@ class EconetEntity(CoordinatorEntity):
             manufacturer=DEVICE_INFO_MANUFACTURER,
             model=DEVICE_INFO_MODEL,
             configuration_url=self._api.host(),
-            sw_version=self._api.sw_rev()
+            sw_version=self._api.sw_rev(),
+            hw_version=self._api.hw_ver()
         )
 
     @property

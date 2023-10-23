@@ -26,7 +26,6 @@ class EconetBinarySensorEntityDescription(BinarySensorEntityDescription):
     icon_off: str | None = None
     availability_key: str = ""
 
-
 BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
     EconetBinarySensorEntityDescription(
         availability_key="pumpCWU",
@@ -110,6 +109,7 @@ class EconetBinarySensor(BinarySensorEntity):
         self._attr_is_on = value
         self.async_write_ha_state()
 
+        
     @property
     def icon(self) -> str | None:
         """Return the icon to use in the frontend."""
