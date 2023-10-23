@@ -84,16 +84,16 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         device_class=BinarySensorDeviceClass.RUNNING
     ),
     EconetBinarySensorEntityDescription(
-        availability_key="fan2Exhaust",
+        availability_key="fan",
         key="fanWorks",
-        name="Feeder",
-        icon="mdi:screw-lag",
+        name="Fan", 
+        icon="mdi:fan",
         device_class=BinarySensorDeviceClass.RUNNING
     ),
         EconetBinarySensorEntityDescription(
-        availability_key="fan",
-        key="fan2ExhaustWorks",
-        name="Feeder",
+        availability_key="fan2Exhaust",
+        key="fan2ExhaustWorks", 
+        name="Fan2",
         icon="mdi:fan",
         icon_off = "mdi:fan-off",
         device_class=BinarySensorDeviceClass.RUNNING
@@ -110,6 +110,14 @@ class EconetBinarySensor(BinarySensorEntity):
         self._attr_is_on = value
         self.async_write_ha_state()
 
+    @property
+    def icon(self) -> str | None:
+        """Return the icon to use in the frontend."""
+        return (
+            self.entity_description.icon_off
+            if self.entity_description.icon_off is not None and not self.is_on
+            else self.entity_description.icon
+        )
 
 class ControllerBinarySensor(EconetEntity, EconetBinarySensor):
     """Describes Econet binary sensor entity."""
