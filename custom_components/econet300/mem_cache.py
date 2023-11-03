@@ -3,6 +3,7 @@ import time
 
 _LOGGER = logging.getLogger(__name__)
 
+
 class MemCacheItem:
     def __init__(self, key, value, duration: int):
         self._key = key
@@ -16,8 +17,12 @@ class MemCacheItem:
         return self._expiry
 
     def __repr__(self):
-        return '<MemCacheItem {%s:%s} expires at: %s, expired: %s>' % (self._key, self._value, self.expiry(),
-                                                                       self.expiry() < time.time())
+        return "<MemCacheItem {%s:%s} expires at: %s, expired: %s>" % (
+            self._key,
+            self._value,
+            self.expiry(),
+            self.expiry() < time.time(),
+        )
 
 
 class MemCache:

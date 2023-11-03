@@ -3,7 +3,12 @@ from dataclasses import dataclass
 from typing import Callable, Any
 
 from .common import EconetDataCoordinator, Econet300Api
-from homeassistant.components.sensor import SensorEntityDescription, SensorStateClass, SensorDeviceClass, SensorEntity
+from homeassistant.components.sensor import (
+    SensorEntityDescription,
+    SensorStateClass,
+    SensorDeviceClass,
+    SensorEntity,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import TEMP_CELSIUS, PERCENTAGE
 from homeassistant.core import HomeAssistant, callback
@@ -26,7 +31,6 @@ class EconetSensorEntityDescription(SensorEntityDescription):
 
 
 SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
-        
     EconetSensorEntityDescription(
         key="fanPower",
         name="Fan power",
@@ -34,7 +38,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.POWER_FACTOR,
-        process_val=lambda x: round(x, 2)
+        process_val=lambda x: round(x, 2),
     ),
     EconetSensorEntityDescription(
         key="tempCO",
@@ -43,7 +47,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2)
+        process_val=lambda x: round(x, 2),
     ),
     EconetSensorEntityDescription(
         key="tempCOSet",
@@ -52,7 +56,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2)
+        process_val=lambda x: round(x, 2),
     ),
     EconetSensorEntityDescription(
         key="tempFeeder",
@@ -61,7 +65,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2)
+        process_val=lambda x: round(x, 2),
     ),
     EconetSensorEntityDescription(
         key="tempFlueGas",
@@ -70,7 +74,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2)
+        process_val=lambda x: round(x, 2),
     ),
     EconetSensorEntityDescription(
         key="mixerSetTemp1",
@@ -79,8 +83,8 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2)
-    ),    
+        process_val=lambda x: round(x, 2),
+    ),
     EconetSensorEntityDescription(
         key="tempBack",
         name="Water back temperature ",
@@ -88,7 +92,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2)
+        process_val=lambda x: round(x, 2),
     ),
     EconetSensorEntityDescription(
         key="tempCWU",
@@ -97,7 +101,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2)
+        process_val=lambda x: round(x, 2),
     ),
     EconetSensorEntityDescription(
         key="tempExternalSensor",
@@ -106,7 +110,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=TEMP_CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2)
+        process_val=lambda x: round(x, 2),
     ),
     EconetSensorEntityDescription(
         key="boilerPower",
@@ -115,7 +119,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.POWER_FACTOR,
-        process_val=lambda x: round(x, 2)
+        process_val=lambda x: round(x, 2),
     ),
     EconetSensorEntityDescription(
         key="fuelLevel",
@@ -123,31 +127,31 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         icon="mdi:gas-station",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
-        process_val=lambda x: round(x, 1)
+        process_val=lambda x: round(x, 1),
     ),
     EconetSensorEntityDescription(
         key="mode",
         name="Operation mode",
         icon="mdi:sync",
         state_class=SensorStateClass.MEASUREMENT,
-        process_val=lambda x: x
+        process_val=lambda x: x,
     ),
-        EconetSensorEntityDescription(
+    EconetSensorEntityDescription(
         key="lambdaSet",
         name="Oxygen set level",
         icon="mdi:lambda",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
-        process_val=lambda x: x/10
+        process_val=lambda x: x / 10,
     ),
-        EconetSensorEntityDescription(
+    EconetSensorEntityDescription(
         key="lambdaLevel",
         name="Oxygen level",
         icon="mdi:lambda",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
-        process_val=lambda x: x/10
-    )
+        process_val=lambda x: x / 10,
+    ),
 )
 
 
@@ -166,8 +170,12 @@ class EconetSensor(SensorEntity):
 class ControllerSensor(EconetEntity, EconetSensor):
     """"""
 
-    def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
-                api: Econet300Api):
+    def __init__(
+        self,
+        description: EconetSensorEntityDescription,
+        coordinator: EconetDataCoordinator,
+        api: Econet300Api,
+    ):
         super().__init__(description, coordinator, api)
 
 
@@ -182,16 +190,20 @@ def create_controller_sensors(coordinator: EconetDataCoordinator, api: Econet300
         if can_add(description, coordinator):
             entities.append(ControllerSensor(description, coordinator, api))
         else:
-            _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
-                                                                "added")
+            _LOGGER.debug(
+                "Availability key: "
+                + description.key
+                + " does not exist, entity will not be "
+                "added"
+            )
 
     return entities
 
 
 async def async_setup_entry(
-        hass: HomeAssistant,
-        entry: ConfigEntry,
-        async_add_entities: AddEntitiesCallback,
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
 ) -> bool:
     """Set up the sensor platform."""
 
