@@ -7,16 +7,26 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .api import Econet300Api
 from .common import EconetDataCoordinator
-from .const import DEVICE_INFO_CONTROLLER_NAME, DEVICE_INFO_MANUFACTURER, DEVICE_INFO_MODEL, DOMAIN, \
-    DEVICE_INFO_MIXER_NAME
+from .const import (
+    DEVICE_INFO_CONTROLLER_NAME,
+    DEVICE_INFO_MANUFACTURER,
+    DEVICE_INFO_MODEL,
+    DOMAIN,
+    DEVICE_INFO_MIXER_NAME,
+)
 
 _LOGGER = logging.getLogger(__name__)
+
 
 class EconetEntity(CoordinatorEntity):
     """Representes EconetEntity"""
 
-    def __init__(self, description: EntityDescription, coordinator: EconetDataCoordinator,
-                 api: Econet300Api):
+    def __init__(
+        self,
+        description: EntityDescription,
+        coordinator: EconetDataCoordinator,
+        api: Econet300Api,
+    ):
         super().__init__(coordinator)
 
         self.entity_description = description
@@ -39,7 +49,7 @@ class EconetEntity(CoordinatorEntity):
             model=DEVICE_INFO_MODEL,
             configuration_url=self._api.host(),
             sw_version=self._api.sw_rev(),
-            hw_version=self._api.hw_ver()
+            hw_version=self._api.hw_ver(),
         )
 
     @property
@@ -50,7 +60,9 @@ class EconetEntity(CoordinatorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        _LOGGER.debug("Update EconetEntity, entity name:" + self.entity_description.name)
+        _LOGGER.debug(
+            "Update EconetEntity, entity name:" + self.entity_description.name
+        )
 
         if self._coordinator.data[self.entity_description.key] is None:
             return
@@ -64,7 +76,11 @@ class EconetEntity(CoordinatorEntity):
         _LOGGER.debug("Added to HASS:" + self.entity_description.name)
 
         if self._coordinator.data[self.entity_description.key] is None:
-            _LOGGER.warning("Data key: " + self.entity_description.key + " was expected to exist but it doesn't")
+            _LOGGER.warning(
+                "Data key: "
+                + self.entity_description.key
+                + " was expected to exist but it doesn't"
+            )
             return
 
         value = self._coordinator.data[self.entity_description.key]

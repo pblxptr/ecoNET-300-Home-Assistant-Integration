@@ -1,13 +1,15 @@
 {
   "domain": "econet300",
   "name": "ecoNET300",
+  "codeowners": ["@pblxptr"],
   "config_flow": true,
-  "documentation": "https://www.home-assistant.io/integrations/example",
+  "documentation": "https://github.com/pblxptr/ecoNET-300-Home-Assistant-Integration",
+  "issue_tracker": "https://github.com/pblxptr/ecoNET-300-Home-Assistant-Integration/issues",
   "requirements": [],
   "ssdp": [],
   "zeroconf": [],
   "homekit": {},
   "dependencies": [],
   "iot_class": "local_polling",
-  "version": "0.1.1"
+  "version": "0.1.3"
 }
