@@ -72,10 +72,10 @@ class EconetClient:
         return await self._get(url)
 
     async def _get(self, url):
-        attempt = 0
+        attempt = 1
         max_attempts = 5
 
-        while ++attempt <= max_attempts:
+        while attempt <= max_attempts:
             try:
                 async with await self._session.get(
                     url, auth=self._auth, timeout=10
@@ -92,6 +92,8 @@ class EconetClient:
                     "Timeout error, retry({}/{})".format(attempt, max_attempts)
                 )
                 await asyncio.sleep(1)
+            finally:
+                attempt += 1
 
 
 class Econet300Api:
