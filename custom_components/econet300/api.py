@@ -87,10 +87,8 @@ class EconetClient:
                         return None
 
                     return await resp.json()
-            except TimeoutError as error:
-                _LOGGER.warning(
-                    "Timeout error, retry({}/{})".format(attempt, max_attempts)
-                )
+            except TimeoutError:
+                _LOGGER.warning("Timeout error, retry(%i/%i)", attempt, max_attempts)
                 await asyncio.sleep(1)
             finally:
                 attempt += 1
