@@ -173,9 +173,6 @@ class Econet300Api:
 
         return True
 
-    async def fetch_data(self):
-        return await self._fetch_reg_key(API_REG_PARAMS_URI, API_REG_PARAMS_PARAM_DATA)
-
     async def get_param_limits(self, param: str):
         if not self._cache.exists(API_EDITABLE_PARAMS_LIMITS_DATA):
             limits = await self._fetch_reg_key(
@@ -205,15 +202,29 @@ class Econet300Api:
         curr_limits = limits[param_idx]
         return Limits(curr_limits["min"], curr_limits["max"])
 
-    async def _fetch_reg_key(self, reg, data_key):
+    async def fetch_data(self) -> dict[str, Any]:
+        """Fetch merged reg_params and sys_params data."""
+        reg_params = await self._fetch_reg_key(
+            API_REG_PARAMS_URI, API_REG_PARAMS_PARAM_DATA
+        )
+        sys_params = await self._fetch_reg_key(API_SYS_PARAMS_URI)
+        return {**reg_params, **sys_params}
+
+    async def _fetch_reg_key(self, reg, data_key: str | None = None):
+        """Fetch a key from the json-encoded data.
+        If key is None, then return whole data.
+        """
         data = await self._client.get_params(reg)
 
         if data is None:
-            raise DataError("Data fetched by API for reg: " + reg + " is None")
+            raise DataError(f"Data fetched by API for reg: {reg} is None")
+
+        if data_key is None:
+            return data
 
         if data_key not in data:
             _LOGGER.debug(data)
-            raise DataError("Data for key: " + data_key + " does not exist")
+            raise DataError(f"Data for key: {data_key} does not exist")
 
         return data[data_key]
 
