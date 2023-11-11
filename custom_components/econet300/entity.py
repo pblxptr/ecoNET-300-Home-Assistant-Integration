@@ -60,7 +60,6 @@ class EconetEntity(CoordinatorEntity):
         """Handle updated data from the coordinator."""
         _LOGGER.debug(
             "Update EconetEntity, entity name: %s", self.entity_description.name
-            
         )
 
         if self._coordinator.data[self.entity_description.key] is None:
@@ -75,10 +74,11 @@ class EconetEntity(CoordinatorEntity):
         _LOGGER.debug("Added to HASS: %s", self.entity_description.name)
 
         if self._coordinator.data[self.entity_description.key] is None:
-            _LOGGER.warning (
-                "Data key: %s was expected to exist but it doesn't", self.entity_description.key
-                )
-            
+            _LOGGER.warning(
+                "Data key: %s was expected to exist but it doesn't",
+                self.entity_description.key,
+            )
+
             return
 
         value = self._coordinator.data[self.entity_description.key]
