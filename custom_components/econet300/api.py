@@ -89,7 +89,7 @@ class EconetClient:
                     return await resp.json()
             except TimeoutError as error:
                 _LOGGER.warning(
-                    "Timeout error, retry({}/{})".format(attempt, max_attempts)
+                    "Timeout error, retry(%s/%s)", attempt, max_attempts
                 )
                 await asyncio.sleep(1)
 
@@ -126,27 +126,21 @@ class Econet300Api:
 
         if API_SYS_PARAMS_PARAM_UID not in sys_params:
             _LOGGER.warning(
-                "{} not in sys_params - cannot set proper UUID".format(
-                    API_SYS_PARAMS_PARAM_UID
-                )
+                "%s not in sys_params - cannot set proper UUID", API_SYS_PARAMS_PARAM_UID
             )
         else:
             self._uid = sys_params[API_SYS_PARAMS_PARAM_UID]
 
         if API_SYS_PARAMS_PARAM_SW_REV not in sys_params:
             _LOGGER.warning(
-                "{} not in sys_params - cannot set proper sw_revision".format(
-                    API_SYS_PARAMS_PARAM_SW_REV
-                )
+                "%s not in sys_params - cannot set proper sw_revision", API_SYS_PARAMS_PARAM_SW_REV
             )
         else:
             self._sw_revision = sys_params[API_SYS_PARAMS_PARAM_SW_REV]
 
         if API_SYS_PARAMS_PARAM_HW_VER not in sys_params:
             _LOGGER.warning(
-                "{} not in sys_params - cannot set proper hw_version".format(
-                    API_SYS_PARAMS_PARAM_HW_VER
-                )
+                "%s not in sys_params - cannot set proper hw_version", API_SYS_PARAMS_PARAM_HW_VER
             )
         else:
             self._hw_version = sys_params[API_SYS_PARAMS_PARAM_HW_VER]
@@ -155,9 +149,7 @@ class Econet300Api:
         param_idx = map_param(param)
         if param_idx is None:
             _LOGGER.warning(
-                "Requested param set for: '{}' but mapping for this param does not exist".format(
-                    param
-                )
+                "Requested param set for: '{param}' but mapping for this param does not exist"
             )
             return False
 
@@ -188,17 +180,13 @@ class Econet300Api:
 
         if param_idx is None:
             _LOGGER.warning(
-                "Requested param limits for: '{}' but mapping for this param does not exist".format(
-                    param
-                )
+                "Requested param limits for: '%s' but mapping for this param does not exist", param
             )
             return None
 
         if param_idx not in limits:
             _LOGGER.warning(
-                "Requested param limits for: '{}({})' but limits for this param do not exist".format(
-                    param, param_idx
-                )
+                "Requested param limits for: '%s(%s)' but limits for this param do not exist", param, param_idx
             )
             return None
 
