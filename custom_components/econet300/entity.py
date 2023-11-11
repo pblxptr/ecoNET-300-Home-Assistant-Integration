@@ -1,5 +1,4 @@
 import logging
-from dataclasses import dataclass
 
 from homeassistant.core import callback
 from homeassistant.helpers.entity import DeviceInfo, EntityDescription
@@ -12,7 +11,6 @@ from .const import (
     DEVICE_INFO_MANUFACTURER,
     DEVICE_INFO_MODEL,
     DOMAIN,
-    DEVICE_INFO_MIXER_NAME,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -61,7 +59,7 @@ class EconetEntity(CoordinatorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         _LOGGER.debug(
-            "Update EconetEntity, entity name:" + self.entity_description.name
+            "Update EconetEntity, entity name: %s", self.entity_description.name
         )
 
         if self._coordinator.data[self.entity_description.key] is None:
@@ -73,14 +71,14 @@ class EconetEntity(CoordinatorEntity):
 
     async def async_added_to_hass(self):
         """Handle added to hass."""
-        _LOGGER.debug("Added to HASS:" + self.entity_description.name)
+        _LOGGER.debug("Added to HASS: %s", self.entity_description.name)
 
         if self._coordinator.data[self.entity_description.key] is None:
             _LOGGER.warning(
-                "Data key: "
-                + self.entity_description.key
-                + " was expected to exist but it doesn't"
+                "Data key: %s was expected to exist but it doesn't",
+                self.entity_description.key,
             )
+
             return
 
         value = self._coordinator.data[self.entity_description.key]
