@@ -36,9 +36,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         return True
 
     except AuthError as auth_error:
-        raise ConfigEntryAuthFailed("Client not authenticated")
+        raise ConfigEntryAuthFailed("Client not authenticated") from auth_error
     except TimeoutError as timeout_error:
-        raise ConfigEntryNotReady("Target not found")
+        raise ConfigEntryNotReady("Target not found") from timeout_error
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
