@@ -2,6 +2,8 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import Callable, Any
 
+import logging
+
 from .common import EconetDataCoordinator, Econet300Api
 from homeassistant.components.sensor import (
     SensorEntityDescription,
@@ -14,8 +16,6 @@ from homeassistant.const import TEMP_CELSIUS, PERCENTAGE
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API
-
-import logging
 
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .entity import EconetEntity
