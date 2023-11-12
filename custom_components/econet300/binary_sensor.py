@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Callable, Any
 
+import logging
+
 from homeassistant.components.binary_sensor import (
     BinarySensorEntityDescription,
     BinarySensorDeviceClass,
@@ -20,8 +22,6 @@ from .const import (
     DEVICE_INFO_MODEL,
     DEVICE_INFO_MANUFACTURER,
 )
-
-import logging
 
 from .entity import EconetEntity
 
