@@ -18,3 +18,13 @@
 ## v0.1.1
 Add new sensors and binary sensor
 Add hardware version
+
+## v0.1.5
+[Entity/Sensor] Added `lambdaLevel`
+[Entity/Sensor] Added `Wi-Fi signal strength`
+[Entity/Sensor] Added `Wi-Fi signal quality`
+[Entity/Sensor] Added `Module ecoNET software version`
+[Entity/Sensor] Added `Module A version`
+[Entity/Sensor] Added `Module B version`
+[Entity/Sensor] Added `Module Panel version`
+[Entity/Sensor] Added `Module Lambda version`
