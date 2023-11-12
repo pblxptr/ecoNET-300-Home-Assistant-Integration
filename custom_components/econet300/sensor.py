@@ -174,7 +174,6 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         key="quality",
         name="Wi-Fi signal quality",
         icon="mdi:signal",
-        device_class=SensorDeviceClass.SIGNAL_STRENGTH,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.DIAGNOSTIC,
