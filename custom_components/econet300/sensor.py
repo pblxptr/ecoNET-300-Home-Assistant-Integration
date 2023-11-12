@@ -1,10 +1,10 @@
+"""Sensor for Econet300"""
 from abc import ABC
 from dataclasses import dataclass
 from typing import Callable, Any
 
 import logging
 
-from .common import EconetDataCoordinator, Econet300Api
 from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
@@ -12,12 +12,22 @@ from homeassistant.components.sensor import (
     SensorEntity,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import TEMP_CELSIUS, PERCENTAGE
+from homeassistant.const import (
+    TEMP_CELSIUS,
+    PERCENTAGE,
+    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    EntityCategory,
+)
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API
-
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+
+from .common import EconetDataCoordinator, Econet300Api
+from .const import (
+    DOMAIN,
+    SERVICE_COORDINATOR,
+    SERVICE_API,
+)
 from .entity import EconetEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -152,15 +162,28 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         process_val=lambda x: x / 10,
     ),
+    EconetSensorEntityDescription(
+        key="signal",
+        name="Signal strength",
+        device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+        state_class=SensorStateClass.MEASUREMENT,
+        native_unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
 )
 
 
 class EconetSensor(SensorEntity):
-    """"""
+    """Econet Sensor"""
+
+    def __init__(self, entity_description, name, unique_id):
+        super().__init__(name=name, unique_id=unique_id)
+        self.entity_description = entity_description
+        self._attr_native_value = None
 
     def _sync_state(self, value):
         """Sync state"""
-        _LOGGER.debug("Update EconetSensor entity:" + self.entity_description.name)
+        _LOGGER.debug("Update EconetSensor entity: %s", self.entity_description.name)
 
         self._attr_native_value = self.entity_description.process_val(value)
 
@@ -191,10 +214,8 @@ def create_controller_sensors(coordinator: EconetDataCoordinator, api: Econet300
             entities.append(ControllerSensor(description, coordinator, api))
         else:
             _LOGGER.debug(
-                "Availability key: "
-                + description.key
-                + " does not exist, entity will not be "
-                "added"
+                "Availability key: %s does not exist, entity will not be added",
+                description.key,
             )
 
     return entities
