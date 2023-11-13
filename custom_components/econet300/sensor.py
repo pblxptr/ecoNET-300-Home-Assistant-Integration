@@ -1,5 +1,4 @@
 """Sensor for Econet300"""
-from abc import ABC
 from dataclasses import dataclass
 from typing import Callable, Any
 
@@ -18,9 +17,8 @@ from homeassistant.const import (
     SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
     EntityCategory,
 )
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .common import EconetDataCoordinator, Econet300Api
 from .const import (

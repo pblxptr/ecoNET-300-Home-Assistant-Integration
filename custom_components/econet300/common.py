@@ -1,6 +1,6 @@
+"common"
 import logging
 from datetime import timedelta
-from typing import Any
 
 import async_timeout
 from homeassistant.exceptions import ConfigEntryAuthFailed
@@ -46,4 +46,4 @@ class EconetDataCoordinator(DataUpdateCoordinator):
         except AuthError as err:
             raise ConfigEntryAuthFailed from err
         except ApiError as err:
-            raise UpdateFailed(f"Error communicating with API: {err}")
+            raise UpdateFailed(f"Error communicating with API: {err}") from err

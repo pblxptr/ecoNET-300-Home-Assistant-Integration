@@ -127,21 +127,24 @@ class Econet300Api:
 
         if API_SYS_PARAMS_PARAM_UID not in sys_params:
             _LOGGER.warning(
-                "%s not in sys_params - cannot set proper UUID", API_SYS_PARAMS_PARAM_UID
+                "%s not in sys_params - cannot set proper UUID",
+                API_SYS_PARAMS_PARAM_UID,
             )
         else:
             self._uid = sys_params[API_SYS_PARAMS_PARAM_UID]
 
         if API_SYS_PARAMS_PARAM_SW_REV not in sys_params:
             _LOGGER.warning(
-                "%s not in sys_params - cannot set proper sw_revision", API_SYS_PARAMS_PARAM_SW_REV
+                "%s not in sys_params - cannot set proper sw_revision",
+                API_SYS_PARAMS_PARAM_SW_REV,
             )
         else:
             self._sw_revision = sys_params[API_SYS_PARAMS_PARAM_SW_REV]
 
         if API_SYS_PARAMS_PARAM_HW_VER not in sys_params:
             _LOGGER.warning(
-                "%s not in sys_params - cannot set proper hw_version", API_SYS_PARAMS_PARAM_HW_VER
+                "%s not in sys_params - cannot set proper hw_version",
+                API_SYS_PARAMS_PARAM_HW_VER,
             )
         else:
             self._hw_version = sys_params[API_SYS_PARAMS_PARAM_HW_VER]
@@ -178,13 +181,16 @@ class Econet300Api:
 
         if param_idx is None:
             _LOGGER.warning(
-                "Requested param limits for: '%s' but mapping for this param does not exist", param
+                "Requested param limits for: '%s' but mapping for this param does not exist",
+                param,
             )
             return None
 
         if param_idx not in limits:
             _LOGGER.warning(
-                "Requested param limits for: '%s(%s)' but limits for this param do not exist", param, param_idx
+                "Requested param limits for: '%s(%s)' but limits for this param do not exist",
+                param,
+                param_idx,
             )
             return None
 
