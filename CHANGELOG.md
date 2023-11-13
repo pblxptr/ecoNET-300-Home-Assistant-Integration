@@ -28,3 +28,6 @@ Add hardware version
 [Entity/Sensor] Added `Module B version`
 [Entity/Sensor] Added `Module Panel version`
 [Entity/Sensor] Added `Module Lambda version`
+
+## v0.1.6
+fix error in Entity sensor.wi_fi_signal_quality

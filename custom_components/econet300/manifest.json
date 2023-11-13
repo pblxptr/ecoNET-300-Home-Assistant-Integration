@@ -5,7 +5,7 @@
   "config_flow": true,
   "documentation": "https://github.com/pblxptr/ecoNET-300-Home-Assistant-Integration",
   "issue_tracker": "https://github.com/pblxptr/ecoNET-300-Home-Assistant-Integration/issues",
-  "requirements": [],
+  "requirements": ["voluptuous"],
   "ssdp": [],
   "zeroconf": [],
   "homekit": {},
