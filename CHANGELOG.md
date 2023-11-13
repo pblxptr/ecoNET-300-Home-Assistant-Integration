@@ -31,3 +31,6 @@ Add hardware version
 
 ## v0.1.6
 fix error in Entity sensor.wi_fi_signal_quality
+
+## v0.1.7
+Added `Thermostat sensor` ON or OFF

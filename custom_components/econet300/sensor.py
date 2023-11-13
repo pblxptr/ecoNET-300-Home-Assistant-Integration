@@ -161,6 +161,14 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         process_val=lambda x: x / 10,
     ),
     EconetSensorEntityDescription(
+        key="thermostat",
+        name="Thermostat",
+        icon="mdi:thermostat",
+        process_val=lambda x: "ON"
+        if str(x).strip() == "1"
+        else ("OFF" if str(x).strip() == "0" else None),
+    ),
+    EconetSensorEntityDescription(
         key="signal",
         name="Wi-Fi signal strength",
         device_class=SensorDeviceClass.SIGNAL_STRENGTH,
