@@ -137,6 +137,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         process_val=lambda x: round(x, 1),
     ),
+#TODO map mode from endpoint http://LocalIP/econet/rmParamsEnums?
     EconetSensorEntityDescription(
         key="mode",
         name="Operation mode",
@@ -167,6 +168,14 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         process_val=lambda x: "ON"
         if str(x).strip() == "1"
         else ("OFF" if str(x).strip() == "0" else None),
+    ),
+    EconetSensorEntityDescription(
+        key="lambdaStatus",
+        name="Lambda status",
+        icon="mdi:lambda",
+        process_val=lambda x: "Stop"
+        if x == 0
+        else ("Start" if x == 1 else ("FireUp" if x == 2 else "unknown")),
     ),
     EconetSensorEntityDescription(
         key="signal",
