@@ -86,6 +86,7 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         key="feederWorks",
         name="Feeder",
         icon="mdi:screw-lag",
+        icon_off="mdi:screw-lag",
         device_class=BinarySensorDeviceClass.RUNNING,
     ),
     EconetBinarySensorEntityDescription(
