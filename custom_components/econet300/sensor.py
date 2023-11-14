@@ -175,7 +175,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         icon="mdi:lambda",
         process_val=lambda x: "Stop"
         if x == 0
-        else ("Start" if x == 1 else ("FireUp" if x == 2 else "unknown")),
+        else ("Start" if x == 1 else ("Working" if x == 2 else "Unknown")),
     ),
     EconetSensorEntityDescription(
         key="signal",

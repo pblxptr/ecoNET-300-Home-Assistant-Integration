@@ -68,7 +68,7 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
     EconetBinarySensorEntityDescription(
         availability_key="pumpCO",
         key="pumpCOWorks",
-        name="pumpCO",
+        name="Pump",
         icon="mdi:pump",
         icon_off="mdi:pump-off",
         device_class=BinarySensorDeviceClass.RUNNING,
