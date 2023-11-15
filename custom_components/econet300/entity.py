@@ -1,3 +1,4 @@
+"""Base econet entity class."""
 import logging
 
 from homeassistant.core import callback

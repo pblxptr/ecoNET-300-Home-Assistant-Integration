@@ -15,9 +15,9 @@ from homeassistant.const import (
     TEMP_CELSIUS,
     PERCENTAGE,
     SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-    EntityCategory,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .common import EconetDataCoordinator, Econet300Api
@@ -37,6 +37,25 @@ class EconetSensorEntityDescription(SensorEntityDescription):
 
     process_val: Callable[[Any], Any] = lambda x: x
 
+
+# boiler operation names from  endpoint http://LocalIP/econet/rmParamsEnums?
+# TODO map with sensor states
+OPERATION_MODE_NAMES = {
+    0: "TURNED OFF",
+    1: "FIRE UP",
+    2: "STABILIZATION",
+    3: "OPERATION",
+    4: "SUPERVISION",
+    5: "BURNING OFF",
+    6: "STOP",
+    7: "R.P.OUT",
+    8: "MANUAL",
+    9: "ALARM",
+    10: "UNSEALING",
+    11: "CHIMNEY",
+    12: "ACTIVACTION",
+    13: "NO TRANSMISSION",
+}
 
 SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     EconetSensorEntityDescription(
@@ -142,7 +161,8 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         name="Operation mode",
         icon="mdi:sync",
         state_class=SensorStateClass.MEASUREMENT,
-        process_val=lambda x: x,
+        device_class="DEVICE_CLASS_OPERATION_MODE",  # custom class for boiler status
+        process_val=lambda x: OPERATION_MODE_NAMES.get(x, "Unknown"),
     ),
     EconetSensorEntityDescription(
         key="lambdaSet",
@@ -159,6 +179,22 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         process_val=lambda x: x / 10,
+    ),
+    EconetSensorEntityDescription(
+        key="thermostat",
+        name="Thermostat",
+        icon="mdi:thermostat",
+        process_val=lambda x: "ON"
+        if str(x).strip() == "1"
+        else ("OFF" if str(x).strip() == "0" else None),
+    ),
+    EconetSensorEntityDescription(
+        key="lambdaStatus",
+        name="Lambda status",
+        icon="mdi:lambda",
+        process_val=lambda x: "Stop"
+        if x == 0
+        else ("Start" if x == 1 else ("Working" if x == 2 else "Unknown")),
     ),
     EconetSensorEntityDescription(
         key="signal",
