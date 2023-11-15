@@ -160,7 +160,6 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         key="mode",
         name="Operation mode",
         icon="mdi:sync",
-        state_class=SensorStateClass.MEASUREMENT,
         device_class="DEVICE_CLASS_OPERATION_MODE",  # custom class for boiler status
         process_val=lambda x: OPERATION_MODE_NAMES.get(x, "Unknown"),
     ),
