@@ -37,6 +37,24 @@ class EconetSensorEntityDescription(SensorEntityDescription):
 
     process_val: Callable[[Any], Any] = lambda x: x
 
+#boiler operation names from  endpoint http://LocalIP/econet/rmParamsEnums?
+# TODO map with sensor states
+OPERATION_MODE_NAMES = {
+    0:"TURNED OFF",
+    1:"FIRE UP",
+    2:"STABILIZATION",
+    3:"OPERATION",
+    4:"SUPERVISION",
+    5:"BURNING OFF",
+    6:"STOP",
+    7:"R.P.OUT",
+    8:"MANUAL",
+    9:"ALARM",
+    10:"UNSEALING",
+    11:"CHIMNEY",
+    12:"ACTIVACTION",
+    13:"NO TRANSMISSION"
+    }
 
 SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     EconetSensorEntityDescription(
@@ -137,13 +155,13 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         process_val=lambda x: round(x, 1),
     ),
-#TODO map mode from endpoint http://LocalIP/econet/rmParamsEnums?
-    EconetSensorEntityDescription(
+        EconetSensorEntityDescription(
         key="mode",
         name="Operation mode",
         icon="mdi:sync",
         state_class=SensorStateClass.MEASUREMENT,
-        process_val=lambda x: x,
+        device_class="DEVICE_CLASS_OPERATION_MODE", #custom class for boiler status
+        process_val=lambda x: OPERATION_MODE_NAMES.get(x, "Unknown"),
     ),
     EconetSensorEntityDescription(
         key="lambdaSet",
