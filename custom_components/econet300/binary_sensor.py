@@ -1,3 +1,4 @@
+"""Econet binary sensor"""
 from dataclasses import dataclass
 
 import logging
@@ -142,6 +143,7 @@ class ControllerBinarySensor(EconetEntity, EconetBinarySensor):
 def can_add(
     desc: EconetBinarySensorEntityDescription, coordinator: EconetDataCoordinator
 ):
+    """Check can add key"""
     return (
         coordinator.has_data(desc.availability_key)
         and coordinator.data[desc.availability_key] is not False
@@ -149,18 +151,16 @@ def can_add(
 
 
 def create_binary_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
+    """create binary sensors"""
     entities = []
     for description in BINARY_SENSOR_TYPES:
         if can_add(description, coordinator):
             entities.append(ControllerBinarySensor(description, coordinator, api))
         else:
             _LOGGER.debug(
-                "Availability key: "
-                + description.key
-                + " does not exist, entity will not be "
-                "added"
+                "Availability key: %s does not exist, entity will not be added",
+                description.key,
             )
-
     return entities
 
 

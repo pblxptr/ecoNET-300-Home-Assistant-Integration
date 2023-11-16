@@ -25,6 +25,7 @@ from .const import (
     DOMAIN,
     SERVICE_COORDINATOR,
     SERVICE_API,
+    OPERATION_MODE_NAMES,
 )
 from .entity import EconetEntity
 
@@ -37,25 +38,6 @@ class EconetSensorEntityDescription(SensorEntityDescription):
 
     process_val: Callable[[Any], Any] = lambda x: x
 
-
-# boiler operation names from  endpoint http://LocalIP/econet/rmParamsEnums?
-# TODO map with sensor states
-OPERATION_MODE_NAMES = {
-    0: "TURNED OFF",
-    1: "FIRE UP",
-    2: "STABILIZATION",
-    3: "OPERATION",
-    4: "SUPERVISION",
-    5: "BURNING OFF",
-    6: "STOP",
-    7: "R.P.OUT",
-    8: "MANUAL",
-    9: "ALARM",
-    10: "UNSEALING",
-    11: "CHIMNEY",
-    12: "ACTIVACTION",
-    13: "NO TRANSMISSION",
-}
 
 SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     EconetSensorEntityDescription(
@@ -263,7 +245,7 @@ class EconetSensor(SensorEntity):
 
 
 class ControllerSensor(EconetEntity, EconetSensor):
-    """"""
+    """class controller"""
 
     def __init__(
         self,
@@ -275,10 +257,12 @@ class ControllerSensor(EconetEntity, EconetSensor):
 
 
 def can_add(desc: EconetSensorEntityDescription, coordinator: EconetDataCoordinator):
+    """Check it can add key"""
     return coordinator.has_data(desc.key) and coordinator.data[desc.key] is not None
 
 
 def create_controller_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
+    """add key"""
     entities = []
 
     for description in SENSOR_TYPES:
