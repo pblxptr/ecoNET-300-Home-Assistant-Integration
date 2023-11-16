@@ -1,3 +1,4 @@
+"""Econet binary sensor"""
 from dataclasses import dataclass
 
 import logging
