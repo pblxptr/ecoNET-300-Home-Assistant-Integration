@@ -225,13 +225,18 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
  EconetSensorEntityDescription(
-        key="protocolType",
+        key="protocolType", #  "em" or "gm3_pomp"
         name="Protocol",
         device_class="protocol_type",
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
+ EconetSensorEntityDescription(
+        key="controllerID",
+        name="Controler name",
+        device_class="controller_ID",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
 )
-
 
 class EconetSensor(SensorEntity):
     """Econet Sensor"""
