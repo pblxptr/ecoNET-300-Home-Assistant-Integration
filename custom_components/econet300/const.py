@@ -44,6 +44,6 @@ OPERATION_MODE_NAMES = {
 
 # add constants to future
 PRODUCT_TYPE = {
-    0: "ECOMAX_850P_TYPE",
-    1: "ECOMAX_850i_TYPE",
+    0: "ECOMAX_850P_TYPE", #regType 0
+    1: "ECOMAX_850i_TYPE", #regType 1
 }
