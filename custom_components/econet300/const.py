@@ -28,7 +28,7 @@ API_REG_PARAMS_PARAM_DATA = "curr"
 OPERATION_MODE_NAMES = {
     0: "TURNED OFF",
     1: "FIRE UP",
-    2: "STABILIZATION",
+    2: "FIRE UP",
     3: "WORK",
     4: "SUPERVISION",
     5: "Halted",
@@ -38,6 +38,6 @@ OPERATION_MODE_NAMES = {
     9: "ALARM",
     10: "UNSEALING",
     11: "CHIMNEY",
-    12: "ACTIVACTION",
+    12: "STABILIZATION",
     13: "NO TRANSMISSION",
 }
