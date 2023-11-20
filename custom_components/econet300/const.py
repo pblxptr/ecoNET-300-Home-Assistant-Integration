@@ -28,16 +28,22 @@ API_REG_PARAMS_PARAM_DATA = "curr"
 OPERATION_MODE_NAMES = {
     0: "TURNED OFF",
     1: "FIRE UP",
-    2: "STABILIZATION",
+    2: "FIRE UP",
     3: "WORK",
     4: "SUPERVISION",
-    5: "BURNING OFF",
+    5: "Halted",
     6: "STOP",
-    7: "R.P.OUT",
+    7: "BURNING OFF",
     8: "MANUAL",
     9: "ALARM",
     10: "UNSEALING",
     11: "CHIMNEY",
-    12: "ACTIVACTION",
+    12: "STABILIZATION",
     13: "NO TRANSMISSION",
+}
+
+# add constants to future
+PRODUCT_TYPE = {
+    0: "ECOMAX_850P_TYPE",
+    1: "ECOMAX_850i_TYPE",
 }

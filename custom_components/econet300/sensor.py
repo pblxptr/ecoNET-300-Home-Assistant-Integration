@@ -224,6 +224,18 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         device_class="module_lamda_software_version",
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
+    EconetSensorEntityDescription(
+        key="protocolType",  #  "em" or "gm3_pomp"
+        name="Protocol",
+        device_class="protocol_type",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    EconetSensorEntityDescription(
+        key="controllerID",
+        name="Controler name",
+        device_class="controller_ID",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
 )
 
 
