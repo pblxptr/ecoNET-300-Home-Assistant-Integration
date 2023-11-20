@@ -31,7 +31,7 @@ OPERATION_MODE_NAMES = {
     2: "STABILIZATION",
     3: "WORK",
     4: "SUPERVISION",
-    5: "BURNING OFF",
+    5: "Halted",
     6: "STOP",
     7: "BURNING OFF",
     8: "MANUAL",
