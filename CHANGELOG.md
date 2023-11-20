@@ -36,3 +36,8 @@ fix error in Entity sensor.wi_fi_signal_quality
 Added `Thermostat sensor` ON or OFF
 Added `lambdaStatus`
 Added `mode` boiler operation names to status
+
+## v0.1.7-3
+Rename boiler mode names
+Add `protocol_Type` to DIAGNOSTIC sensor
+Add `controllerID` to DIAGNOSTIC sensor   
