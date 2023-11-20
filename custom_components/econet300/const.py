@@ -33,7 +33,7 @@ OPERATION_MODE_NAMES = {
     4: "SUPERVISION",
     5: "BURNING OFF",
     6: "STOP",
-    7: "R.P.OUT",
+    7: "BURNING OFF",
     8: "MANUAL",
     9: "ALARM",
     10: "UNSEALING",
