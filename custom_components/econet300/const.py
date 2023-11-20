@@ -42,8 +42,8 @@ OPERATION_MODE_NAMES = {
     13: "NO TRANSMISSION",
 }
 
-# add constants to future 
-PRODUCT_TYPE ={
-0: "ECOMAX_850P_TYPE",
-1: "ECOMAX_850i_TYPE",
+# add constants to future
+PRODUCT_TYPE = {
+    0: "ECOMAX_850P_TYPE",
+    1: "ECOMAX_850i_TYPE",
 }
