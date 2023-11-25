@@ -23,7 +23,7 @@
             "pumpCWU": { "name": "HUW pump" },
             "quality": { "name": "Signal quality" },
             "signal": { "name": "Signal strength" },
-            "lambdaStatus": { "name": "Signal strength" },
+            "lambdaStatus": { "name": "Lamda status" },
             "termostat": { "name": "Thermostat" },
             "tempCOSet":{ "name": "Boiler set temperature" },
             "mixerSetTemp1":{"name": "Mixer 1 set temperature" },
