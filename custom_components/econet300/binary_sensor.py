@@ -37,7 +37,8 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
     EconetBinarySensorEntityDescription(
         availability_key="pumpCWU",
         key="pumpCWUWorks",
-        name="Water pump",
+        translation_key="pumpCWU",
+        name="HUW pump",
         icon="mdi:pump",
         icon_off="mdi:pump-off",
         device_class=BinarySensorDeviceClass.RUNNING,
@@ -45,7 +46,7 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
     EconetBinarySensorEntityDescription(
         availability_key="pumpCirculation",
         key="pumpCirculationWorks",
-        name="Circulation pump",
+        translation_key="pumpCirculation",
         icon="mdi:pump",
         icon_off="mdi:pump-off",
         device_class=BinarySensorDeviceClass.RUNNING,
@@ -57,6 +58,7 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         icon="mdi:pump",
         icon_off="mdi:pump-off",
         device_class=BinarySensorDeviceClass.RUNNING,
+        entity_registry_visible_default="False",
     ),
     EconetBinarySensorEntityDescription(
         availability_key="pumpSolar",
@@ -65,6 +67,7 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         icon="mdi:pump",
         icon_off="mdi:pump-off",
         device_class=BinarySensorDeviceClass.RUNNING,
+        entity_registry_visible_default="False",
     ),
     EconetBinarySensorEntityDescription(
         availability_key="pumpCO",
@@ -105,6 +108,7 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         icon="mdi:fan",
         icon_off="mdi:fan-off",
         device_class=BinarySensorDeviceClass.RUNNING,
+        entity_registry_visible_default="False",
     ),
 )
 

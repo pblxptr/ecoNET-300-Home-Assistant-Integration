@@ -44,6 +44,23 @@ OPERATION_MODE_NAMES = {
 
 # add constants to future
 PRODUCT_TYPE = {
-    0: "ECOMAX_850P_TYPE",
-    1: "ECOMAX_850i_TYPE",
+    0: "ECOMAX_850P_TYPE",  # regType 0
+    1: "ECOMAX_850i_TYPE",  # regType 1
+}
+
+# Sensors precision value from econet dev
+REG_PARAM_PRECICION = {
+    "boilerPowerKW": 1,
+    "boilerPower": 0,
+    "fuelStream": 1,
+    "ecoSterTemp": 1,
+    "ecoSterSetTemp": 1,
+    "tempExternalSensor": 1,
+    "lambdaSet": 1,
+    "lambdaLevel": 1,
+    "thermoTemp": 1,
+    "thermoSetTemp": 0,
+    "tempFeeder": 0,
+    "tempCO": 0,
+    "tempFlueGas": 0,
 }
