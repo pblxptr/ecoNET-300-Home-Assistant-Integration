@@ -63,4 +63,5 @@ REG_PARAM_PRECICION = {
     "tempFeeder": 0,
     "tempCO": 0,
     "tempFlueGas": 0,
+    "tempCWU":0,
 }
