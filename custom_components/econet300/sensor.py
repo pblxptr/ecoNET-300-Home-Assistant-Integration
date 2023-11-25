@@ -43,7 +43,7 @@ class EconetSensorEntityDescription(SensorEntityDescription):
 SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     EconetSensorEntityDescription(
         key="fanPower",
-        name="Fan power",
+        translation_key="fanPower",
         icon="mdi:fan",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -52,7 +52,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="tempCO",
-        name="Boiler actual temp.",
+        translation_key="tempCO",
         icon="mdi:thermometer-lines",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
@@ -62,7 +62,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="tempCOSet",
-        name="Boiler set temp.",
+        translation_key="tempCOSet",
         icon="mdi:thermometer-chevron-up",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
@@ -71,7 +71,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="tempFeeder",
-        name="Feeder temp.",
+        translation_key="tempFeeder",
         icon="mdi:thermometer",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
@@ -81,7 +81,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="tempFlueGas",
-        name="Exhaust temperature",
+        translation_key="tempFlueGas",
         icon="mdi:thermometer",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
@@ -91,7 +91,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="mixerSetTemp1",
-        name="Mixer 1 set temp.",
+        translation_key="mixerSetTemp1",
         icon="mdi:thermometer",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
@@ -100,6 +100,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="tempBack",
+        translation_key="tempBack",
         name="Water back temperature ",
         icon="mdi:thermometer",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
@@ -109,6 +110,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="tempCWU",
+        translation_key="tempCWU",
         name="Water temperature",
         icon="mdi:thermometer",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
@@ -118,7 +120,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="tempExternalSensor",
-        name="Outside temperature",
+        translation_key="tempExternalSensor",
         icon="mdi:thermometer",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
@@ -128,6 +130,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="boilerPower",
+        translation_key="boilerPower",
         name="Boiler output",
         icon="mdi:gauge",
         native_unit_of_measurement=PERCENTAGE,
@@ -138,6 +141,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="fuelLevel",
+        translation_key="fuelLevel",
         name="Fuel level",
         icon="mdi:gas-station",
         native_unit_of_measurement=PERCENTAGE,
@@ -146,6 +150,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="mode",
+        translation_key="mode",
         name="Operation mode",
         icon="mdi:sync",
         device_class="DEVICE_CLASS_OPERATION_MODE",  # custom class for boiler status
@@ -153,7 +158,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="lambdaSet",
-        name="Oxygen set level",
+        translation_key="lambdaSet",
         icon="mdi:lambda",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
@@ -161,6 +166,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="lambdaLevel",
+        translation_key="lambdaLevel",
         name="Oxygen level",
         icon="mdi:lambda",
         native_unit_of_measurement=PERCENTAGE,
@@ -169,7 +175,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="thermostat",
-        name="Thermostat",
+        translation_key="thermostat",
         icon="mdi:thermostat",
         process_val=lambda x: "ON"
         if str(x).strip() == "1"
@@ -177,15 +183,15 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="lambdaStatus",
-        name="Lambda status",
+        translation_key="lambdaStatus",
         icon="mdi:lambda",
-        process_val=lambda x: "Stop"
+        process_val=lambda x: "STOP"
         if x == 0
-        else ("Start" if x == 1 else ("Working" if x == 2 else "Unknown")),
+        else ("START" if x == 1 else ("Working" if x == 2 else "Unknown")),
     ),
     EconetSensorEntityDescription(
         key="signal",
-        name="Wi-Fi signal strength",
+        translation_key="signal",
         device_class=SensorDeviceClass.SIGNAL_STRENGTH,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
@@ -193,7 +199,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     ),
     EconetSensorEntityDescription(
         key="quality",
-        name="Wi-Fi signal quality",
+        translation_key="quality",
         icon="mdi:signal",
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=PERCENTAGE,

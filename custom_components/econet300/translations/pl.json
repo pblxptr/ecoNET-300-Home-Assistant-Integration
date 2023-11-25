@@ -19,6 +19,13 @@
         }
     },
     "sensor": {
+        "pumpCWU": { "name": "HUW pump" },
+        "quality": { "name": "Jakość sygnału" },
+        "signal": { "name": "Siła sygnału" },
+        "termostat": { "name": "Thermostat" },
+        "tempCOSet":{ "name": "Boiler set temperature" },
+        "mixerSetTemp1":{"name": "Mixer 1 set temperature" },
+        "lambdaSet":{"name": "Oxygen set level" },        
         "tempCO": { "name":  "Temperatura kotła" },
         "fuelLevel": { "name":  "Poziom paliwa" },
         "tempCWU": { "name":  "Temperatura CWU" },
@@ -66,6 +73,6 @@
         "blowFan2BlowPower": { "name":  "Moc nadmuchu wentylatora nadmuchowego 2" },
         "correctionLambda": { "name":  "Korekcja Lambda" },
         "pressure": { "name":  "Ciśnienie" },
-        "CIRCULATION_PUMP_ECOMAX": { "name":  "Pompa cyrkulacyjna" }, 
+        "pumpCirculation": { "name":  "Pompa cyrkulacyjna" }
     }
 }
