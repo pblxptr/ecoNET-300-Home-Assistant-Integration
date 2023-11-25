@@ -39,5 +39,12 @@ Added `mode` boiler operation names to status
 
 ## v0.1.7-3
 Rename boiler mode names
-Add `protocol_Type` to DIAGNOSTIC sensor
-Add `controllerID` to DIAGNOSTIC sensor   
+Added `protocol_Type` to DIAGNOSTIC sensor
+Added `controllerID` to DIAGNOSTIC sensor   
+
+## v0.1.8
+Added REG_PARAM_PRECICION parameters from econet dev file
+Added translations for the sensors
+Added translations dictonary
+By default sensors off: Fan2, Solar pump, Fireplace pump
+Changed depricated unit TEMP_CELSIUS to UnitOfTemperature.CELSIUS

@@ -57,8 +57,8 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         name="Fireplace pump",
         icon="mdi:pump",
         icon_off="mdi:pump-off",
-        entity_registry_visible_default="False",
         device_class=BinarySensorDeviceClass.RUNNING,
+        entity_registry_visible_default="False",
     ),
     EconetBinarySensorEntityDescription(
         availability_key="pumpSolar",
