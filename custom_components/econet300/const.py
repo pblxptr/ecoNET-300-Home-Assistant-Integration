@@ -60,4 +60,7 @@ REG_PARAM_PRECICION = {
     "lambdaLevel": 1,
     "thermoTemp": 1,
     "thermoSetTemp": 0,
+    "tempFeeder":0,
+    "tempCO":0,
+    "tempFlueGas":0,
 }

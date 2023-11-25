@@ -26,6 +26,7 @@ from .const import (
     SERVICE_COORDINATOR,
     SERVICE_API,
     OPERATION_MODE_NAMES,
+    REG_PARAM_PRECICION,
 )
 from .entity import EconetEntity
 
@@ -56,7 +57,8 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2),
+        suggested_display_precision=REG_PARAM_PRECICION["tempCO"],
+        process_val=lambda x: x,
     ),
     EconetSensorEntityDescription(
         key="tempCOSet",
@@ -74,7 +76,8 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2),
+        suggested_display_precision=REG_PARAM_PRECICION["tempFeeder"],
+        process_val=lambda x: x,
     ),
     EconetSensorEntityDescription(
         key="tempFlueGas",
@@ -83,7 +86,8 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2),
+        suggested_display_precision=REG_PARAM_PRECICION["tempFlueGas"],
+        process_val=lambda x: x,
     ),
     EconetSensorEntityDescription(
         key="mixerSetTemp1",
@@ -119,7 +123,8 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2),
+        suggested_display_precision=REG_PARAM_PRECICION["tempExternalSensor"],
+        process_val=lambda x: x,
     ),
     EconetSensorEntityDescription(
         key="boilerPower",
@@ -128,7 +133,8 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.POWER_FACTOR,
-        process_val=lambda x: round(x, 2),
+        suggested_display_precision=REG_PARAM_PRECICION["boilerPower"],
+        process_val=lambda x: x,
     ),
     EconetSensorEntityDescription(
         key="fuelLevel",
