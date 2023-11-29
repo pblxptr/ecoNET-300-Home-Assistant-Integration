@@ -160,6 +160,8 @@ def can_add(
         and coordinator.data[desc.availability_key] is not False
     )
 
+def can_add_mixer(desc: EconetBinarySensorEntityDescription, coordinator: EconetDataCoordinator):
+    return coordinator.has_data(desc.availability_key) and coordinator.data[desc.availability_key] is not None
 
 def create_binary_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
     """create binary sensors"""
@@ -207,5 +209,6 @@ async def async_setup_entry(
 
     entities: list[ControllerBinarySensor] = []
     entities = entities + create_binary_sensors(coordinator, api)
+    entities = entities + create_mixer_sensors(coordinator, api)
 
     return async_add_entities(entities)
