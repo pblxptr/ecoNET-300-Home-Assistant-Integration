@@ -161,6 +161,7 @@ class Econet300Api:
             self._hw_version = sys_params[API_SYS_PARAMS_PARAM_HW_VER]
 
     async def set_param(self, param, value) -> bool:
+        """Set a parameter value via the Econet 300 API"""
         param_idx = map_param(param)
         if param_idx is None:
             _LOGGER.warning(
@@ -181,6 +182,8 @@ class Econet300Api:
         return True
 
     async def get_param_limits(self, param: str):
+        """fetches and returns the limits for a particular parameter from the Econet 300 API,
+        using a cache for efficient retrieval if available"""
         if not self._cache.exists(API_EDITABLE_PARAMS_LIMITS_DATA):
             limits = await self._fetch_reg_key(
                 API_EDITABLE_PARAMS_LIMITS_URI, API_EDITABLE_PARAMS_LIMITS_DATA
@@ -236,6 +239,7 @@ class Econet300Api:
 
 
 async def make_api(hass: HomeAssistant, cache: MemCache, data: dict):
+    """Create an Econet 300 API instance"""
     return await Econet300Api.create(
         EconetClient(
             data["host"],
