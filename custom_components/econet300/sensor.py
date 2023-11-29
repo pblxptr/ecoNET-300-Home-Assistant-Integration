@@ -27,8 +27,9 @@ from .const import (
     SERVICE_API,
     OPERATION_MODE_NAMES,
     REG_PARAM_PRECICION,
+    AVAILABLE_NUMBER_OF_MIXERS,
 )
-from .entity import EconetEntity
+from .entity import EconetEntity, MixerEntity
 
 _LOGGER = logging.getLogger(__name__)
 

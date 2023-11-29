@@ -18,9 +18,10 @@ from .const import (
     DOMAIN,
     SERVICE_COORDINATOR,
     SERVICE_API,
+    AVAILABLE_NUMBER_OF_MIXERS,
 )
 
-from .entity import EconetEntity
+from .entity import EconetEntity, MixerEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -143,6 +144,12 @@ class ControllerBinarySensor(EconetEntity, EconetBinarySensor):
     ):
         super().__init__(description, coordinator, api)
 
+class MixerBinarySensor(MixerEntity, EconetBinarySensor):
+    """Describes Econet binary sensor entity."""
+
+    def __init__(self, description: EconetBinarySensorEntityDescription, coordinator: EconetDataCoordinator,
+                 api: Econet300Api, idx: int):
+        super().__init__(description, coordinator, api, idx)
 
 def can_add(
     desc: EconetBinarySensorEntityDescription, coordinator: EconetDataCoordinator
@@ -167,11 +174,31 @@ def create_binary_sensors(coordinator: EconetDataCoordinator, api: Econet300Api)
             )
     return entities
 
+def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
+    entities = []
+
+    for i in range(1, AVAILABLE_NUMBER_OF_MIXERS + 1):
+        description = EconetBinarySensorEntityDescription(
+            availability_key="mixerTemp{}".format(i),
+            key="mixerPumpWorks{}".format(i),
+            name="Mixer {} pump works".format(i),
+            icon="mdi:pump",
+            device_class=BinarySensorDeviceClass.RUNNING
+        )
+
+        if can_add_mixer(description, coordinator):
+            entities.append(MixerBinarySensor(description, coordinator, api, i))
+        else:
+            _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
+                                                                   "added")
+
+    return entities
 
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
+    entities = entities + create_mixer_sensors(coordinator, api)
 ) -> bool:
     """Set up the sensor platform."""
 

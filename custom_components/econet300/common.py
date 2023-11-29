@@ -7,7 +7,7 @@ from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import Econet300Api, AuthError, ApiError
-from .const import DOMAIN
+from .const import EDITABLE_PARAMS_MAPPING_TABLE, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
