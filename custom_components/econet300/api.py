@@ -23,7 +23,7 @@ from .mem_cache import MemCache
 _LOGGER = logging.getLogger(__name__)
 
 def map_param(param_name):
-
+    """Check params mapping in const.py"""
     if not param_name in EDITABLE_PARAMS_MAPPING_TABLE:
         return None
 

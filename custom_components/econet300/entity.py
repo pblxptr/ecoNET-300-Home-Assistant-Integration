@@ -12,6 +12,7 @@ from .const import (
     DEVICE_INFO_MANUFACTURER,
     DEVICE_INFO_MODEL,
     DOMAIN,
+    DEVICE_INFO_MIXER_NAME,
 )
 
 _LOGGER = logging.getLogger(__name__)

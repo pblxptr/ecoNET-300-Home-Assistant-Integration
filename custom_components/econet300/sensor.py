@@ -296,9 +296,9 @@ class ControllerSensor(EconetEntity, EconetSensor):
 class MixerSensor(MixerEntity, EconetSensor):
     """"""
 
-def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
-                 api: Econet300Api, idx: int):
-        super().__init__(description, coordinator, api, idx)
+    def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
+                    api: Econet300Api, idx: int):
+            super().__init__(description, coordinator, api, idx)
 
 def can_add(desc: EconetSensorEntityDescription, coordinator: EconetDataCoordinator):
     """Check it can add key"""
@@ -328,7 +328,7 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
             key="mixerTemp{}".format(i),
             name="Mixer {} temperature".format(i),
             icon="mdi:thermometer",
-            native_unit_of_measurement=TEMP_CELSIUS,
+            native_unit_of_measurement=UnitOfTemperature.CELSIUS,
             state_class=SensorStateClass.MEASUREMENT,
             device_class=SensorDeviceClass.TEMPERATURE,
             process_val=lambda x: round(x, 2)
