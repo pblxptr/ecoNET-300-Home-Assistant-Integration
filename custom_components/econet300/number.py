@@ -34,6 +34,10 @@ NUMBER_TYPES: tuple[EconetNumberEntityDescription, ...] = (
         icon="mdi:thermometer",
         device_class=NumberDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        entity_registry_visible_default=True,
+        min_value=27,
+        max_value=68,
+        native_step=1,
     ),
     EconetNumberEntityDescription(
         key="tempCWUSet",
@@ -41,6 +45,11 @@ NUMBER_TYPES: tuple[EconetNumberEntityDescription, ...] = (
         icon="mdi:thermometer",
         device_class=NumberDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        entity_registry_visible_default=True,
+        min_value=20,
+        max_value=55,
+        native_step=1,
+
     ),
 )
 
