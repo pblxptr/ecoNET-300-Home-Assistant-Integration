@@ -144,10 +144,17 @@ class ControllerBinarySensor(EconetEntity, EconetBinarySensor):
     ):
         super().__init__(description, coordinator, api)
 
+
 class MixerBinarySensor(MixerEntity, EconetBinarySensor):
     """Describes Econet binary sensor entity."""
-    def __init__(self, description: EconetBinarySensorEntityDescription, coordinator: EconetDataCoordinator,
-                 api: Econet300Api, idx: int):
+
+    def __init__(
+        self,
+        description: EconetBinarySensorEntityDescription,
+        coordinator: EconetDataCoordinator,
+        api: Econet300Api,
+        idx: int,
+    ):
         super().__init__(description, coordinator, api, idx)
 
 
@@ -161,8 +168,14 @@ def can_add(
     )
 
 
-def can_add_mixer(desc: EconetBinarySensorEntityDescription, coordinator: EconetDataCoordinator):
-    return coordinator.has_data(desc.availability_key) and coordinator.data[desc.availability_key] is not None
+def can_add_mixer(
+    desc: EconetBinarySensorEntityDescription, coordinator: EconetDataCoordinator
+):
+    return (
+        coordinator.has_data(desc.availability_key)
+        and coordinator.data[desc.availability_key] is not None
+    )
+
 
 def create_binary_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
     """create binary sensors"""
@@ -177,6 +190,7 @@ def create_binary_sensors(coordinator: EconetDataCoordinator, api: Econet300Api)
             )
     return entities
 
+
 def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
     entities = []
 
@@ -186,17 +200,19 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
             key="mixerPumpWorks{}".format(i),
             name="Mixer {} pump works".format(i),
             icon="mdi:pump",
-            device_class=BinarySensorDeviceClass.RUNNING
+            device_class=BinarySensorDeviceClass.RUNNING,
         )
 
         if can_add_mixer(description, coordinator):
             entities.append(MixerBinarySensor(description, coordinator, api, i))
         else:
-            _LOGGER.debug("Availability key: %s does not exist, entity will not be added", description.key)
-
-
+            _LOGGER.debug(
+                "Availability key: %s does not exist, entity will not be added",
+                description.key,
+            )
 
     return entities
+
 
 async def async_setup_entry(
     hass: HomeAssistant,

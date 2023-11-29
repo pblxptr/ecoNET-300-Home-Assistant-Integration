@@ -16,11 +16,12 @@ from .const import (
     API_SYS_PARAMS_PARAM_HW_VER,
     API_EDITABLE_PARAMS_LIMITS_DATA,
     API_EDITABLE_PARAMS_LIMITS_URI,
-    EDITABLE_PARAMS_MAPPING_TABLE
+    EDITABLE_PARAMS_MAPPING_TABLE,
 )
 from .mem_cache import MemCache
 
 _LOGGER = logging.getLogger(__name__)
+
 
 def map_param(param_name):
     """Check params mapping in const.py"""
@@ -28,6 +29,7 @@ def map_param(param_name):
         return None
 
     return EDITABLE_PARAMS_MAPPING_TABLE[param_name]
+
 
 class Limits:
     def __init__(self, min_v: float, max_v: float):

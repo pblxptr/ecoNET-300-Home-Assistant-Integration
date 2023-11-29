@@ -293,12 +293,19 @@ class ControllerSensor(EconetEntity, EconetSensor):
     ):
         super().__init__(description, coordinator, api)
 
+
 class MixerSensor(MixerEntity, EconetSensor):
     """"""
 
-    def __init__(self, description: EconetSensorEntityDescription, coordinator: EconetDataCoordinator,
-                    api: Econet300Api, idx: int):
-            super().__init__(description, coordinator, api, idx)
+    def __init__(
+        self,
+        description: EconetSensorEntityDescription,
+        coordinator: EconetDataCoordinator,
+        api: Econet300Api,
+        idx: int,
+    ):
+        super().__init__(description, coordinator, api, idx)
+
 
 def can_add(desc: EconetSensorEntityDescription, coordinator: EconetDataCoordinator):
     """Check it can add key"""
@@ -320,6 +327,7 @@ def create_controller_sensors(coordinator: EconetDataCoordinator, api: Econet300
 
     return entities
 
+
 def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
     entities = []
 
@@ -331,16 +339,21 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
             native_unit_of_measurement=UnitOfTemperature.CELSIUS,
             state_class=SensorStateClass.MEASUREMENT,
             device_class=SensorDeviceClass.TEMPERATURE,
-            process_val=lambda x: round(x, 2)
+            process_val=lambda x: round(x, 2),
         )
 
         if can_add(description, coordinator):
             entities.append(MixerSensor(description, coordinator, api, i))
         else:
-            _LOGGER.debug("Availability key: " + description.key + " does not exist, entity will not be "
-                                                                   "added")
+            _LOGGER.debug(
+                "Availability key: "
+                + description.key
+                + " does not exist, entity will not be "
+                "added"
+            )
 
     return entities
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
