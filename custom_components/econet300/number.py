@@ -64,18 +64,24 @@ class EconetNumber(EconetEntity, NumberEntity):
 
     async def async_set_native_value(self, value: float) -> None:
         """Update the current value."""
-        _LOGGER.debug("Set value: {}".format(value))
+        _LOGGER.debug("Set value: %s", value)
 
         if value == self._attr_native_value:
             return
 
         if value > self._attr_native_max_value:
             _LOGGER.warning(
-                "Requested value: '{}' exceeds maximum allowed value: '{}'".format(value, self._attr_max_value))
-            return
+            "Requested value: '%s' exceeds maximum allowed value: '%s'",
+            value,
+            self._attr_max_value
+        )
 
         if value < self._attr_native_min_value:
-            _LOGGER.warning("Requested value: '{}' is below allowed value: '{}'".format(value, self._attr_min_value))
+            _LOGGER.warning(
+            "Requested value: '%s' is below allowed value: '%s'",
+            value,
+            self._attr_min_value
+        )
             return
 
         if not await self._api.set_param(self.entity_description.key, int(value)):
@@ -123,6 +129,6 @@ async def async_setup_entry(
                 api
             ))
         else:
-            _LOGGER.debug("Cannot add entity - availability key: {} does not exist".format(description.key))
+            _LOGGER.debug("Cannot add entity - availability key: %s does not exist", description.key)
 
     return async_add_entities(entities)
