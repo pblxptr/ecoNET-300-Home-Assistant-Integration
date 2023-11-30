@@ -11,5 +11,5 @@
   "homekit": {},
   "dependencies": [],
   "iot_class": "local_polling",
-  "version": "1.0.0-beta"
+  "version": "v0.3.0"
 }
