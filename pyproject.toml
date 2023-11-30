@@ -10,6 +10,13 @@ load-plugins = [
     "pylint.extensions.typing",
 ]
 
+[tool.pylint."MESSAGES CONTROL"]
+# Reasons disabled:
+# format - handled by ruff
+disable = [
+    "format",
+    ]
+
 [tool.pylint.BASIC]
 class-const-naming-style = "any"
 

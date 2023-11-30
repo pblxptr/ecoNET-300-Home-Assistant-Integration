@@ -1,7 +1,8 @@
 """Sensor for Econet300."""
+from collections.abc import Callable
 from dataclasses import dataclass
 import logging
-from typing import Any, Callable
+from typing import Any
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -268,6 +269,7 @@ class EconetSensor(SensorEntity):
     """Econet Sensor."""
 
     def __init__(self, entity_description, name, unique_id):
+        """Initialize the sensor."""
         super().__init__(name=name, unique_id=unique_id)
         self.entity_description = entity_description
         self._attr_native_value = None
@@ -290,20 +292,22 @@ class ControllerSensor(EconetEntity, EconetSensor):
         coordinator: EconetDataCoordinator,
         api: Econet300Api,
     ):
+        """Initialize a new instance of the EconetSensor class."""
         super().__init__(description, coordinator, api)
 
 
 class MixerSensor(MixerEntity, EconetSensor):
-    """mixer sensor class."""
+    """Mixer sensor class."""
 
     def __init__(
-        self,
-        description: EconetSensorEntityDescription,
-        coordinator: EconetDataCoordinator,
-        api: Econet300Api,
-        idx: int,
-    ):
-        super().__init__(description, coordinator, api, idx)
+            self,
+            description: EconetSensorEntityDescription,
+            coordinator: EconetDataCoordinator,
+            api: Econet300Api,
+            idx: int,
+        ):
+            """Initialize a new instance of the EconetSensor class."""
+            super().__init__(description, coordinator, api, idx)
 
 
 def can_add(desc: EconetSensorEntityDescription, coordinator: EconetDataCoordinator):
@@ -328,7 +332,7 @@ def create_controller_sensors(coordinator: EconetDataCoordinator, api: Econet300
 
 
 def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
-    """Creating individual sensor description smixer sensors."""
+    """Create individual sensor descriptions for mixer sensors."""
     entities = []
 
     for i in range(1, AVAILABLE_NUMBER_OF_MIXERS + 1):

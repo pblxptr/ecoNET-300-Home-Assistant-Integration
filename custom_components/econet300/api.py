@@ -1,21 +1,23 @@
+"""Module provides the API functionality for ecoNET-300 Home Assistant Integration."""
 import asyncio
-import logging
 from http import HTTPStatus
+import logging
 from typing import Any
 
-from aiohttp import ClientSession, BasicAuth
+from aiohttp import BasicAuth, ClientSession
+
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import (
-    API_SYS_PARAMS_PARAM_UID,
-    API_SYS_PARAMS_URI,
-    API_REG_PARAMS_URI,
-    API_REG_PARAMS_PARAM_DATA,
-    API_SYS_PARAMS_PARAM_SW_REV,
-    API_SYS_PARAMS_PARAM_HW_VER,
     API_EDITABLE_PARAMS_LIMITS_DATA,
     API_EDITABLE_PARAMS_LIMITS_URI,
+    API_REG_PARAMS_PARAM_DATA,
+    API_REG_PARAMS_URI,
+    API_SYS_PARAMS_PARAM_HW_VER,
+    API_SYS_PARAMS_PARAM_SW_REV,
+    API_SYS_PARAMS_PARAM_UID,
+    API_SYS_PARAMS_URI,
     EDITABLE_PARAMS_MAPPING_TABLE,
 )
 from .mem_cache import MemCache
@@ -24,8 +26,8 @@ _LOGGER = logging.getLogger(__name__)
 
 
 def map_param(param_name):
-    """Check params mapping in const.py"""
-    if not param_name in EDITABLE_PARAMS_MAPPING_TABLE:
+    """Check params mapping in const.py."""
+    if param_name not in EDITABLE_PARAMS_MAPPING_TABLE:
         return None
 
     return EDITABLE_PARAMS_MAPPING_TABLE[param_name]
@@ -38,22 +40,24 @@ class Limits:
 
 
 class AuthError(Exception):
-    """AuthError"""
+    """Raised when authentication fails."""
 
 
 class ApiError(Exception):
-    """AuthError"""
+    """Raised when an API error occurs."""
 
 
 class DataError(Exception):
-    """DataError"""
+    """Raised when there is an error with the data."""
 
 
 class EconetClient:
+    """Client for interacting with the ecoNET-300 API."""
+
     def __init__(
         self, host: str, username: str, password: str, session: ClientSession
     ) -> None:
-        """Initialize."""
+        """Initializethe EconetClient."""
 
         proto = ["http://", "https://"]
 
@@ -68,17 +72,25 @@ class EconetClient:
         self._auth = BasicAuth(username, password)
 
     def host(self):
+        """Get the host."""
         return self._host
 
     async def set_param(self, key: str, value: str):
-        url = "{}/econet/rmCurrNewParam?newParamKey={}&newParamValue={}".format(
-            self._host, key, value
-        )
+        """Set a parameter."""
+        url = f"{self._host}/econet/rmCurrNewParam?newParamKey={key}&newParamValue={value}"
 
         return await self._get(url)
 
     async def get_params(self, reg: str):
-        url = "{}/econet/{}".format(self._host, reg)
+        """Get parameters for a given registry.
+
+        Args:
+            reg (str): The registry to retrieve parameters from.
+
+        Returns:
+            dict: The parameters retrieved from the registry.
+        """
+        url = f"{self._host}/econet/{reg}"
 
         return await self._get(url)
 
@@ -161,7 +173,7 @@ class Econet300Api:
             self._hw_version = sys_params[API_SYS_PARAMS_PARAM_HW_VER]
 
     async def set_param(self, param, value) -> bool:
-        """Set a parameter value via the Econet 300 API"""
+        """Set a parameter value via the Econet 300 API."""
         param_idx = map_param(param)
         if param_idx is None:
             _LOGGER.warning(
@@ -182,8 +194,7 @@ class Econet300Api:
         return True
 
     async def get_param_limits(self, param: str):
-        """fetches and returns the limits for a particular parameter from the Econet 300 API,
-        using a cache for efficient retrieval if available"""
+        """Fetch and return the limits for a particular parameter from the Econet 300 API, using a cache for efficient retrieval if available."""
         if not self._cache.exists(API_EDITABLE_PARAMS_LIMITS_DATA):
             limits = await self._fetch_reg_key(
                 API_EDITABLE_PARAMS_LIMITS_URI, API_EDITABLE_PARAMS_LIMITS_DATA
@@ -220,9 +231,7 @@ class Econet300Api:
         return {**reg_params, **sys_params}
 
     async def _fetch_reg_key(self, reg, data_key: str | None = None):
-        """Fetch a key from the json-encoded data.
-        If key is None, then return whole data.
-        """
+        """Fetch a key from the json-encoded data returned by the API for a given registry If key is None, then return whole data."""
         data = await self._client.get_params(reg)
 
         if data is None:
@@ -239,7 +248,7 @@ class Econet300Api:
 
 
 async def make_api(hass: HomeAssistant, cache: MemCache, data: dict):
-    """Create an Econet 300 API instance"""
+    """Create an Econet 300 API instance."""
     return await Econet300Api.create(
         EconetClient(
             data["host"],
