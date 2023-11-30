@@ -49,8 +49,14 @@ Added translations dictonary
 By default sensors off: Fan2, Solar pump, Fireplace pump
 Changed depricated unit TEMP_CELSIUS to UnitOfTemperature.CELSIUS
 
-## v1.0.0-beta
+## [v1.0.0] 2023-11-30
 Thank for @pblxptr add new code line from him
-Add control CO set
-Separate device Mixer
+- Added: [New features boiler set temperature]
+- Added: [Mixer sensor new device]
+- Added: [Comments in code]
+- Added: [Configuration in project code style by HA rules]
+
+
+
+
 
