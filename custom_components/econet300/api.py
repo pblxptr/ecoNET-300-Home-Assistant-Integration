@@ -34,11 +34,14 @@ def map_param(param_name):
 
 
 class Limits:
+    """Class representing the limits of a value."""
+
     def __init__(self, min_v: float, max_v: float):
         self.min = min_v
         self.max = max_v
 
-
+    class AuthError(Exception):
+        """Raised when authentication fails."""
 class AuthError(Exception):
     """Raised when authentication fails."""
 
@@ -119,6 +122,8 @@ class EconetClient:
 
 
 class Econet300Api:
+    """Client for interacting with the ecoNET-300 API."""
+
     def __init__(self, client: EconetClient, cache: MemCache) -> None:
         self._client = client
         self._cache = cache
@@ -128,24 +133,30 @@ class Econet300Api:
 
     @classmethod
     async def create(cls, client: EconetClient, cache: MemCache):
+        """Create an instance of Econet300Api."""
         c = cls(client, cache)
         await c.init()
 
         return c
 
     def host(self):
+        """Get the host."""
         return self._client.host()
 
     def uid(self) -> str:
+        """Get the UID."""
         return self._uid
 
     def sw_rev(self) -> str:
-        return self._sw_revision
+        """Get the software revision."""
+        # Set a parameter value via the Econet 300 API.
 
     def hw_ver(self) -> str:
+        """Get the hardware version."""
         return self._hw_version
 
     async def init(self):
+        """Initialize the Econet300Api."""
         sys_params = await self._client.get_params(API_SYS_PARAMS_URI)
 
         if API_SYS_PARAMS_PARAM_UID not in sys_params:

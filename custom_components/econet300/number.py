@@ -1,11 +1,10 @@
-"""base Number for Econet300"""
+"""Base Number for Econet300."""
+from dataclasses import dataclass
 import logging
 
-from dataclasses import dataclass
-
 from homeassistant.components.number import (
-    NumberEntity,
     NumberDeviceClass,
+    NumberEntity,
     NumberEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
@@ -13,9 +12,9 @@ from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .common import EconetDataCoordinator, Econet300Api
 from .api import Limits
-from .const import DOMAIN, SERVICE_COORDINATOR, SERVICE_API
+from .common import Econet300Api, EconetDataCoordinator
+from .const import DOMAIN, SERVICE_API, SERVICE_COORDINATOR
 from .entity import EconetEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -49,7 +48,6 @@ NUMBER_TYPES: tuple[EconetNumberEntityDescription, ...] = (
         min_value=20,
         max_value=55,
         native_step=1,
-
     ),
 )
 
@@ -63,14 +61,15 @@ class EconetNumber(EconetEntity, NumberEntity):
         coordinator: EconetDataCoordinator,
         api: Econet300Api,
     ):
+        """Initialize the EconetNumber entity."""
         super().__init__(description, coordinator, api)
 
     def _sync_state(self, value):
-        """Sync state"""
+        """Sync state."""
 
         self._attr_native_value = value
 
-        # TODO: Tmp remove
+
         self._attr_native_min_value = value - 1
         self._attr_native_max_value = value + 1
 
@@ -107,12 +106,12 @@ class EconetNumber(EconetEntity, NumberEntity):
 
 
 def can_add(desc: EconetNumberEntityDescription, coordinator: EconetDataCoordinator):
-    """checks if a given entity can be added based on the availability of data in the coordinator"""
+    """Check if a given entity can be added based on the availability of data in the coordinator."""
     return coordinator.has_data(desc.key) and coordinator.data[desc.key]
 
 
 def apply_limits(desc: EconetNumberEntityDescription, limits: Limits):
-    """sets the native minimum and maximum values for the given entity description."""
+    """Set the native minimum and maximum values for the given entity description."""
     desc.native_min_value = limits.min
     desc.native_max_value = limits.max
 
