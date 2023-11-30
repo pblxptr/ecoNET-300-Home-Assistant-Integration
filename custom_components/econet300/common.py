@@ -1,12 +1,13 @@
-"common"
-import logging
+"""Common code for econet300 integration."""
 from datetime import timedelta
+import logging
 
 import async_timeout
+
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import Econet300Api, AuthError, ApiError
+from .api import ApiError, AuthError, Econet300Api
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -27,7 +28,8 @@ class EconetDataCoordinator(DataUpdateCoordinator):
         self._api = api
 
     def has_data(self, key: str):
-        return key in self.data
+            """Check if the specified key exists in the data dictionary."""
+            return key in self.data
 
     async def _async_update_data(self):
         """Fetch data from API endpoint.
