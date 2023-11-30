@@ -1,26 +1,18 @@
-"""Econet binary sensor"""
+"""Econet binary sensor."""
 from dataclasses import dataclass
-
 import logging
 
 from homeassistant.components.binary_sensor import (
-    BinarySensorEntityDescription,
     BinarySensorDeviceClass,
     BinarySensorEntity,
+    BinarySensorEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .common import EconetDataCoordinator, Econet300Api
-
-from .const import (
-    DOMAIN,
-    SERVICE_COORDINATOR,
-    SERVICE_API,
-    AVAILABLE_NUMBER_OF_MIXERS,
-)
-
+from .common import Econet300Api, EconetDataCoordinator
+from .const import AVAILABLE_NUMBER_OF_MIXERS, DOMAIN, SERVICE_API, SERVICE_COORDINATOR
 from .entity import EconetEntity, MixerEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -115,10 +107,10 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
 
 
 class EconetBinarySensor(BinarySensorEntity):
-    """Describe Econet Binary Sensor"""
+    """Describe Econet Binary Sensor."""
 
     def _sync_state(self, value):
-        """Sync state"""
+        """Sync state."""
 
         self._attr_is_on = value
         self.async_write_ha_state()
@@ -142,11 +134,12 @@ class ControllerBinarySensor(EconetEntity, EconetBinarySensor):
         coordinator: EconetDataCoordinator,
         api: Econet300Api,
     ):
+        """Initialize the ControllerBinarySensor."""
         super().__init__(description, coordinator, api)
 
 
 class MixerBinarySensor(MixerEntity, EconetBinarySensor):
-    """Describes Econet binary sensor entity."""
+    """Describes Econet Mixer binary sensor entity."""
 
     def __init__(
         self,
@@ -161,7 +154,7 @@ class MixerBinarySensor(MixerEntity, EconetBinarySensor):
 def can_add(
     desc: EconetBinarySensorEntityDescription, coordinator: EconetDataCoordinator
 ):
-    """Check can add key"""
+    """Check can add key."""
     return (
         coordinator.has_data(desc.availability_key)
         and coordinator.data[desc.availability_key] is not False
@@ -178,14 +171,14 @@ def can_add_mixer(
 
 
 def create_binary_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
-    """create binary sensors"""
+    """Create binary sensors."""
     entities = []
     for description in BINARY_SENSOR_TYPES:
         if can_add(description, coordinator):
             entities.append(ControllerBinarySensor(description, coordinator, api))
         else:
             _LOGGER.debug(
-                "Availability key: %s does not exist, entity will not be added",
+                "Availability key: %s does not exist, entity will not be added.",
                 description.key,
             )
     return entities
@@ -196,9 +189,9 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
 
     for i in range(1, AVAILABLE_NUMBER_OF_MIXERS + 1):
         description = EconetBinarySensorEntityDescription(
-            availability_key="mixerTemp{}".format(i),
-            key="mixerPumpWorks{}".format(i),
-            name="Mixer {} pump works".format(i),
+            availability_key=f"mixerTemp{i}",
+            key=f"mixerPumpWorks{i}",
+            name=f"Mixer {i} pump works",
             icon="mdi:pump",
             device_class=BinarySensorDeviceClass.RUNNING,
         )
