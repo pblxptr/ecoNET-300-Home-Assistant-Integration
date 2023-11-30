@@ -49,7 +49,7 @@ Added translations dictonary
 By default sensors off: Fan2, Solar pump, Fireplace pump
 Changed depricated unit TEMP_CELSIUS to UnitOfTemperature.CELSIUS
 
-## [v1.0.0] 2023-11-30
+## [v0.3.0] 2023-11-30
 Thank for @pblxptr add new code line from him
 - Added: [New features boiler set temperature]
 - Added: [Mixer sensor new device]
