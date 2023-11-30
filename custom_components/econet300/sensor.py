@@ -1,33 +1,32 @@
-"""Sensor for Econet300"""
+"""Sensor for Econet300."""
 from dataclasses import dataclass
-from typing import Callable, Any
-
 import logging
+from typing import Any, Callable
 
 from homeassistant.components.sensor import (
-    SensorEntityDescription,
-    SensorStateClass,
     SensorDeviceClass,
     SensorEntity,
+    SensorEntityDescription,
+    SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-    UnitOfTemperature,
     PERCENTAGE,
     SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+    UnitOfTemperature,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .common import EconetDataCoordinator, Econet300Api
+from .common import Econet300Api, EconetDataCoordinator
 from .const import (
+    AVAILABLE_NUMBER_OF_MIXERS,
     DOMAIN,
-    SERVICE_COORDINATOR,
-    SERVICE_API,
     OPERATION_MODE_NAMES,
     REG_PARAM_PRECICION,
-    AVAILABLE_NUMBER_OF_MIXERS,
+    SERVICE_API,
+    SERVICE_COORDINATOR,
 )
 from .entity import EconetEntity, MixerEntity
 
@@ -266,7 +265,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
 
 
 class EconetSensor(SensorEntity):
-    """Econet Sensor"""
+    """Econet Sensor."""
 
     def __init__(self, entity_description, name, unique_id):
         super().__init__(name=name, unique_id=unique_id)
@@ -274,7 +273,7 @@ class EconetSensor(SensorEntity):
         self._attr_native_value = None
 
     def _sync_state(self, value):
-        """Sync state"""
+        """Sync state."""
         _LOGGER.debug("Update EconetSensor entity: %s", self.entity_description.name)
 
         self._attr_native_value = self.entity_description.process_val(value)
@@ -283,7 +282,7 @@ class EconetSensor(SensorEntity):
 
 
 class ControllerSensor(EconetEntity, EconetSensor):
-    """class controller"""
+    """class controller."""
 
     def __init__(
         self,
@@ -295,7 +294,7 @@ class ControllerSensor(EconetEntity, EconetSensor):
 
 
 class MixerSensor(MixerEntity, EconetSensor):
-    """mixer sensor class"""
+    """mixer sensor class."""
 
     def __init__(
         self,
@@ -308,12 +307,12 @@ class MixerSensor(MixerEntity, EconetSensor):
 
 
 def can_add(desc: EconetSensorEntityDescription, coordinator: EconetDataCoordinator):
-    """Check it can add key"""
+    """Check it can add key."""
     return coordinator.has_data(desc.key) and coordinator.data[desc.key] is not None
 
 
 def create_controller_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
-    """add key"""
+    """Add key."""
     entities = []
 
     for description in SENSOR_TYPES:
@@ -329,7 +328,7 @@ def create_controller_sensors(coordinator: EconetDataCoordinator, api: Econet300
 
 
 def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
-    """creating individual sensor description smixer sensors"""
+    """Creating individual sensor description smixer sensors."""
     entities = []
 
     for i in range(1, AVAILABLE_NUMBER_OF_MIXERS + 1):
