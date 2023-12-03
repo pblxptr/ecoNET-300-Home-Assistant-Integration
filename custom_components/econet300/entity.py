@@ -10,16 +10,16 @@ from .common import EconetDataCoordinator
 from .const import (
     DEVICE_INFO_CONTROLLER_NAME,
     DEVICE_INFO_MANUFACTURER,
+    DEVICE_INFO_MIXER_NAME,
     DEVICE_INFO_MODEL,
     DOMAIN,
-    DEVICE_INFO_MIXER_NAME,
 )
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class EconetEntity(CoordinatorEntity):
-    """Representes EconetEntity"""
+    """Representes EconetEntity."""
 
     def __init__(
         self,
@@ -36,12 +36,12 @@ class EconetEntity(CoordinatorEntity):
 
     @property
     def unique_id(self) -> str | None:
-        """Return the unique_id of the entity"""
+        """Return the unique_id of the entity."""
         return f"{self._api.uid()}-{self.entity_description.key}"
 
     @property
     def device_info(self) -> DeviceInfo | None:
-        """Return device info of the entity"""
+        """Return device info of the entity."""
         return DeviceInfo(
             identifiers={(DOMAIN, self._api.uid())},
             name=DEVICE_INFO_CONTROLLER_NAME,
@@ -90,7 +90,7 @@ class EconetEntity(CoordinatorEntity):
 
 
 class MixerEntity(EconetEntity):
-    """Represents MixerEntity"""
+    """Represents MixerEntity."""
 
     def __init__(
         self,
@@ -105,9 +105,9 @@ class MixerEntity(EconetEntity):
 
     @property
     def device_info(self) -> DeviceInfo | None:
-        """Return device info of the entity"""
+        """Return device info of the entity."""
         return DeviceInfo(
-            identifiers={(DOMAIN, "{}-mixer-{}".format(self._api.uid(), self._idx))},
+            identifiers={(DOMAIN, f"{self._api.uid()}-mixer-{self._idx}")},
             name=DEVICE_INFO_MIXER_NAME,
             manufacturer=DEVICE_INFO_MANUFACTURER,
             model=DEVICE_INFO_MODEL,
