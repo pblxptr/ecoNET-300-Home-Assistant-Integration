@@ -57,8 +57,9 @@ Thank for @pblxptr add new code line from him
 - Added: [Configuration in project code style by HA rules]
 
 ## [v0.3.1] 2023-12-
-- Rename `tempCWU` sensor name from 'water temperature' to 'HUW temperature'
-- Rename  `pumpCO` binary_sensor name from `Pump` to `Boiler pump`
+- Rename: `tempCWU` sensor name from 'water temperature' to 'HUW temperature'
+- Rename:  `pumpCO` binary_sensor name from `Pump` to `Boiler pump`
+- Added: `HUW temperature` sensor key `tempCWUSet`
 
 
 

@@ -126,6 +126,17 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         suggested_display_precision=REG_PARAM_PRECICION["tempCWU"],
         process_val=lambda x: x,
     ),
+   EconetSensorEntityDescription(
+        key="tempCWUSet",
+        translation_key="CWU_SET_TEMP",
+        name="HUW temperature",
+        icon="mdi:thermometer",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        suggested_display_precision=REG_PARAM_PRECICION["tempCWU"],
+        process_val=lambda x: x,
+    ),
     EconetSensorEntityDescription(
         key="tempExternalSensor",
         translation_key="tempExternalSensor",

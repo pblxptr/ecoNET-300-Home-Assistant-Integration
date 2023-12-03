@@ -78,7 +78,8 @@
             "tempAirOut": { "name": "Exhaust air temperature" },
             "thermoTemp": { "name": "Thermostat temperature" },
             "correctionLambda": { "name": "Lambda correction factor" },
-            "pressure": { "name": "Pressure" }
+            "pressure": { "name": "Pressure" },
+            "CWU_SET_TEMP": {"name": "HUW tank preset temperature"}
             
         },
         "binary_sensor": {
