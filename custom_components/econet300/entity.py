@@ -10,8 +10,8 @@ from .common import EconetDataCoordinator
 from .const import (
     DEVICE_INFO_CONTROLLER_NAME,
     DEVICE_INFO_MANUFACTURER,
-    DEVICE_INFO_MODEL,
     DEVICE_INFO_MIXER_NAME,
+    DEVICE_INFO_MODEL,
     DOMAIN,
 )
 
@@ -108,7 +108,7 @@ class MixerEntity(EconetEntity):
         """Return device info of the entity."""
         return DeviceInfo(
             identifiers={(DOMAIN, f"{self._api.uid()}-mixer-{self._idx}")},
-            name=f"{DEVICE_INFO_MIXER_NAME} {self._idx}",
+            name=f"{DEVICE_INFO_MIXER_NAME}{self._idx}",
             manufacturer=DEVICE_INFO_MANUFACTURER,
             model=DEVICE_INFO_MODEL,
             configuration_url=self._api.host(),
