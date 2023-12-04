@@ -1,3 +1,7 @@
+# Disclaimer
+Due to a stall on the original [pblxptr/ecoNET-300-Home-Assistant-Integration](https://github.com/pblxptr/ecoNET-300-Home-Assistant-Integration) repo, we have forked.
+Most of the work was done by pblxpt, for which we're very thankful as the community.
+
 # ecoNET300 Home Assistant integration
 <div align="center">
 
