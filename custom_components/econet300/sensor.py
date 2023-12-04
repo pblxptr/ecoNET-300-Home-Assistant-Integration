@@ -322,7 +322,10 @@ class MixerSensor(MixerEntity, EconetSensor):
 
 
 def can_add(desc: EconetSensorEntityDescription, coordinator: EconetDataCoordinator):
-    """Check it can add key."""
+    """Check if it can add the key."""
+    if desc.key not in coordinator.data:
+        _LOGGER.debug("Key %s does not exist in coordinator.data", desc.key)
+        return False
     return coordinator.has_data(desc.key) and coordinator.data[desc.key] is not None
 
 
