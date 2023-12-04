@@ -37,7 +37,7 @@ class Limits:
     """Construct all the necessary attributes for the Limits object."""
 
     def __init__(self, min_v: float, max_v: float):
-        """Constructs all the necessary attributes for the Limits object."""
+        """Construct the necessary attributes for the Limits object."""
         self.min = min_v
         self.max = max_v
 
@@ -126,7 +126,7 @@ class Econet300Api:
     """Client for interacting with the ecoNET-300 API."""
 
     def __init__(self, client: EconetClient, cache: MemCache) -> None:
-        """Initializes the Econet300Api object with a client, cache, and default values for uid, sw_revision, and hw_version."""
+        """Initialize the Econet300Api object with a client, cache, and default values for uid, sw_revision, and hw_version."""
         self._client = client
         self._cache = cache
         self._uid = "default-uid"

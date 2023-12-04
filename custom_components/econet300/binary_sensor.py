@@ -148,6 +148,8 @@ class MixerBinarySensor(MixerEntity, EconetBinarySensor):
         api: Econet300Api,
         idx: int,
     ):
+        """Initialize the MixerBinarySensor object with a description, coordinator, api, and index."""
+
         super().__init__(description, coordinator, api, idx)
 
 
