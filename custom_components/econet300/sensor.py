@@ -202,6 +202,18 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         if x == 0
         else ("START" if x == 1 else ("Working" if x == 2 else "Unknown")),
     ),
+        EconetSensorEntityDescription(
+        key="tempUpperBuffer",
+        translation_key="tempUpperBuffer",
+        name="Upper buffer temperature",
+        icon="mdi:thermometer",
+        entity_registry_visible_default=False,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        suggested_display_precision=REG_PARAM_PRECICION["tempUpperBuffer"],
+        process_val=lambda x: x,
+    ),
     EconetSensorEntityDescription(
         key="signal",
         translation_key="signal",
