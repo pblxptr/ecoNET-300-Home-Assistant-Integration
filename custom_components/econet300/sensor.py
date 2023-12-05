@@ -371,7 +371,7 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
             )
         description2 = EconetSensorEntityDescription(
             key=f"mixerSetTemp{i}",
-            name=f"Mixer {i} temperature",
+            name=f"Mixer {i} set temperature",
             icon="mdi:thermometer",
             entity_registry_enabled_default=False,
             entity_registry_visible_default=False,
