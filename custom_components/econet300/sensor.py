@@ -119,7 +119,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
    EconetSensorEntityDescription(
         key="tempCWUSet",
         translation_key="CWU_SET_TEMP",
-        name="HUW temperature",
+        name="HUW set temperature",
         icon="mdi:thermometer",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
