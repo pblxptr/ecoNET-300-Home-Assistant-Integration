@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 88
-target-version = ["py311"]
+target-version = ["py310","py311"]
 
 [tool.pylint.MAIN]
 py-version = "3.11"
@@ -8,6 +8,10 @@ py-version = "3.11"
 load-plugins = [
     "pylint.extensions.code_style",
     "pylint.extensions.typing",
+    "hass_constructor",
+    "hass_enforce_type_hints",
+    "hass_imports",
+    "hass_logger",
 ]
 
 [tool.pylint."MESSAGES CONTROL"]
