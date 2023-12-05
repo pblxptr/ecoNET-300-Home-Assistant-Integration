@@ -1,3 +1,8 @@
+# !!! Important info !!!
+I started this project cause I needed to integrate my ecoNET300 into the HomeAssistant, to get some information about sensors etc, I thought it would be useful for some automation and so on...
+After some time passed it turned out that I barely use this integration...so I felt no need to develop it further, especially since I am currently extremely involved in things that are much more interesting to me.
+Fortunately @jontofront decided to make a fork and continue the work on his own: Here is his fork - https://github.com/jontofront/ecoNET-300-Home-Assistant-Integration You will probably find more changes, updates, and fixes there, so I really encourage you to take a look there.  
+
 # ecoNET300 Home Assistant integration
 <div align="center">
 
