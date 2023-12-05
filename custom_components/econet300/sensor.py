@@ -208,6 +208,7 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         name="Upper buffer temperature",
         icon="mdi:thermometer",
         entity_registry_visible_default=False,
+        entity_registry_enabled_default=False,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
@@ -370,8 +371,10 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
             )
         description2 = EconetSensorEntityDescription(
             key=f"mixerSetTemp{i}",
-            name=f"mixerSetTemp {i} temperature",
+            name=f"Mixer {i} temperature",
             icon="mdi:thermometer",
+            entity_registry_enabled_default=False,
+            entity_registry_visible_default=False,
             native_unit_of_measurement=UnitOfTemperature.CELSIUS,
             state_class=SensorStateClass.MEASUREMENT,
             device_class=SensorDeviceClass.TEMPERATURE,
