@@ -51,7 +51,6 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         icon="mdi:pump",
         icon_off="mdi:pump-off",
         device_class=BinarySensorDeviceClass.RUNNING,
-        entity_registry_visible_default=False,
     ),
     EconetBinarySensorEntityDescription(
         availability_key="pumpSolar",
@@ -60,7 +59,6 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         icon="mdi:pump",
         icon_off="mdi:pump-off",
         device_class=BinarySensorDeviceClass.RUNNING,
-        entity_registry_visible_default=False,
     ),
     EconetBinarySensorEntityDescription(
         availability_key="pumpCO",
@@ -101,7 +99,7 @@ BINARY_SENSOR_TYPES: tuple[EconetBinarySensorEntityDescription, ...] = (
         icon="mdi:fan",
         icon_off="mdi:fan-off",
         device_class=BinarySensorDeviceClass.RUNNING,
-        entity_registry_visible_default=False,
+        entity_registry_enabled_default=False,
     ),
 )
 
@@ -195,7 +193,7 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
             description = EconetBinarySensorEntityDescription(
                 availability_key=availaimility_mixer_key,
                 key=f"mixerPumpWorks{i}",
-                name=f"Mixer {i} pump works",
+                name=f"Mixer {i}",
                 icon="mdi:pump",
                 device_class=BinarySensorDeviceClass.RUNNING,
             )
