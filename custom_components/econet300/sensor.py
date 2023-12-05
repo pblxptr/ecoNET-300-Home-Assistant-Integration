@@ -359,7 +359,8 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
             native_unit_of_measurement=UnitOfTemperature.CELSIUS,
             state_class=SensorStateClass.MEASUREMENT,
             device_class=SensorDeviceClass.TEMPERATURE,
-            process_val=lambda x: round(x, 2),
+            suggested_display_precision=0,
+            process_val=lambda x: x,
         )
         if can_add(description, coordinator):
             entities.append(MixerSensor(description, coordinator, api, i))
@@ -372,12 +373,11 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
             key=f"mixerSetTemp{i}",
             name=f"Mixer {i} set temperature",
             icon="mdi:thermometer",
-            entity_registry_enabled_default=False,
-            entity_registry_visible_default=False,
             native_unit_of_measurement=UnitOfTemperature.CELSIUS,
             state_class=SensorStateClass.MEASUREMENT,
             device_class=SensorDeviceClass.TEMPERATURE,
-            process_val=lambda x: round(x, 2),
+            suggested_display_precision=0,
+            process_val=lambda x: x,
         )
 
         if can_add(description2, coordinator):
