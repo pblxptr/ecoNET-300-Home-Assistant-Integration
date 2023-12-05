@@ -195,7 +195,7 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
             description = EconetBinarySensorEntityDescription(
                 availability_key=availaimility_mixer_key,
                 key=f"mixerPumpWorks{i}",
-                name=f"Mixer {i} pump works",
+                name=f"Mixer {i}",
                 icon="mdi:pump",
                 device_class=BinarySensorDeviceClass.RUNNING,
             )
