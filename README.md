@@ -26,7 +26,7 @@ Plans for first relase:
 Follow [this guide](https://hacs.xyz/docs/faq/custom_repositories/) to add ecoNET-300-Home-Assistant-Integration as a custom repository to the HACS.
 Use this url as a repo: 
 ```
-https://github.com/pblxptr/ecoNET-300-Home-Assistant-Integration
+https://github.com/jontofront/ecoNET-300-Home-Assistant-Integration
 ```
 
 ## Manual Installation
