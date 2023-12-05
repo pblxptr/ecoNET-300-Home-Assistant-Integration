@@ -72,7 +72,8 @@
             "blowFan1BlowPower": { "name":  "Moc nadmuchu wentylatora nadmuchowego 1" },
             "blowFan2BlowPower": { "name":  "Moc nadmuchu wentylatora nadmuchowego 2" },
             "correctionLambda": { "name":  "Korekcja Lambda" },
-            "pressure": { "name":  "Ciśnienie" }
+            "pressure": { "name":  "Ciśnienie" },
+            "CWU_SET_TEMP": {"name": "Temperatura zadana zasobnika CWU "}
             
         },
         "binary_sensor": {

@@ -96,16 +96,6 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         process_val=lambda x: x,
     ),
     EconetSensorEntityDescription(
-        key="mixerSetTemp1",
-        translation_key="mixerSetTemp1",
-        name="Mixer 1 set temperature",
-        icon="mdi:thermometer",
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        state_class=SensorStateClass.MEASUREMENT,
-        device_class=SensorDeviceClass.TEMPERATURE,
-        process_val=lambda x: round(x, 2),
-    ),
-    EconetSensorEntityDescription(
         key="tempBack",
         translation_key="tempBack",
         name="Water back temperature ",
@@ -118,12 +108,23 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
     EconetSensorEntityDescription(
         key="tempCWU",
         translation_key="tempCWU",
-        name="Water temperature",
+        name="HUW temperature",
         icon="mdi:thermometer",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         device_class=SensorDeviceClass.TEMPERATURE,
         suggested_display_precision=REG_PARAM_PRECICION["tempCWU"],
+        process_val=lambda x: x,
+    ),
+   EconetSensorEntityDescription(
+        key="tempCWUSet",
+        translation_key="CWU_SET_TEMP",
+        name="HUW set temperature",
+        icon="mdi:thermometer",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        suggested_display_precision=REG_PARAM_PRECICION["tempCWUSet"],
         process_val=lambda x: x,
     ),
     EconetSensorEntityDescription(
@@ -200,6 +201,18 @@ SENSOR_TYPES: tuple[EconetSensorEntityDescription, ...] = (
         process_val=lambda x: "STOP"
         if x == 0
         else ("START" if x == 1 else ("Working" if x == 2 else "Unknown")),
+    ),
+        EconetSensorEntityDescription(
+        key="tempUpperBuffer",
+        translation_key="tempUpperBuffer",
+        name="Upper buffer temperature",
+        icon="mdi:thermometer",
+        entity_registry_visible_default=False,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        suggested_display_precision=REG_PARAM_PRECICION["tempUpperBuffer"],
+        process_val=lambda x: x,
     ),
     EconetSensorEntityDescription(
         key="signal",
@@ -311,7 +324,10 @@ class MixerSensor(MixerEntity, EconetSensor):
 
 
 def can_add(desc: EconetSensorEntityDescription, coordinator: EconetDataCoordinator):
-    """Check it can add key."""
+    """Check if it can add the key."""
+    if desc.key not in coordinator.data:
+        _LOGGER.debug("Key %s does not exist in coordinator.data", desc.key)
+        return False
     return coordinator.has_data(desc.key) and coordinator.data[desc.key] is not None
 
 
@@ -343,9 +359,9 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
             native_unit_of_measurement=UnitOfTemperature.CELSIUS,
             state_class=SensorStateClass.MEASUREMENT,
             device_class=SensorDeviceClass.TEMPERATURE,
-            process_val=lambda x: round(x, 2),
+            suggested_display_precision=0,
+            process_val=lambda x: x,
         )
-
         if can_add(description, coordinator):
             entities.append(MixerSensor(description, coordinator, api, i))
         else:
@@ -353,7 +369,24 @@ def create_mixer_sensors(coordinator: EconetDataCoordinator, api: Econet300Api):
                 "Availability key: %s does not exist, entity will not be added",
                 description.key,
             )
+        description2 = EconetSensorEntityDescription(
+            key=f"mixerSetTemp{i}",
+            name=f"Mixer {i} set temperature",
+            icon="mdi:thermometer",
+            native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+            state_class=SensorStateClass.MEASUREMENT,
+            device_class=SensorDeviceClass.TEMPERATURE,
+            suggested_display_precision=0,
+            process_val=lambda x: x,
+        )
 
+        if can_add(description2, coordinator):
+            entities.append(MixerSensor(description2, coordinator, api, i))
+        else:
+            _LOGGER.debug(
+                "Availability key: %s does not exist, entity will not be added",
+                description2.key,
+            )
     return entities
 
 
