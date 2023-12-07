@@ -7,7 +7,7 @@ Most of the work was done by pblxpt, for which we're very thankful as the commun
 
 | Home Assistant  | ecoNET300     |
 | --------------- | ------------- |
-| <img src="images/ha.png" width="100" height="100" />                |   <img src="images/econet.webp" width="95" height="95" />            |
+| <img src="https://raw.githubusercontent.com/jontofront/ecoNET-300-Home-Assistant-Integration/master/images/ha.png" width="100" height="100" />                |   <img src="https://raw.githubusercontent.com/jontofront/ecoNET-300-Home-Assistant-Integration/master/images/econet.webp" width="95" height="95" />            |
 
 </div>
 
